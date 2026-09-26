@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  font-family: "roboto", "san-serif";
+}
+
+body {
+  background-color: #bfc2c2;
+}
+
+.header {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.logo {
+  text-decoration: none;
+  color: #008000;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.logo span {
+  color: #008BFF;
+  font-style: italic;
+}
+
+.catchphrase {
+  color: #007000;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  gap: 20px;
+}
+
+.joke-advice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75vw;
+  background-color: white;
+  padding: 30px 20px;
+  border-radius: 20px;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.copy {
+  border: none;
+  background-color: transparent;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.copy .copy-active,
+.copy .copy-copied {
+  display: none;
+}
+
+.copy:active .copy-hover {
+  display: none;
+}
+
+.copy:active .copy-active {
+  display: inline-block;
+}
+
+.copy-copied {
+  color: #008000;
+}
+
+.title {
+  margin-bottom: 25px;
+  color: #525252;
+}
+
+.joke-advice-body {
+  text-align: center;
+  font-weight: bold;
+}
+
+.joke-advice-credits {
+  margin-top: 10px;
+  font-style: italic;
+  color: #808080;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 75vw;
+}
+
+.primary-button {
+  border: none;
+  border-radius: 8px;
+  padding: 15px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.primary-button i {
+  display: none;
+}
+
+.tell-a-joke {
+  background-color: #008BFF;
+  transition: background-color 0.2s ease;
+}
+
+.tell-a-joke:hover{
+  background-color: #017bdf;
+}
+
+.tell-a-joke:hover .hover-laugh {
+  display: inline-block;
+}
+
+.tell-a-joke:active {
+  background-color: #008BFF;
+}
+
+.tell-a-joke:active .hover-laugh {
+  display: none;
+}
+
+.tell-a-joke:active .active-laugh {
+  display: inline-block;
+  color: #ffff00;
+}
+
+.give-advice {
+  background-color: #008000;
+  transition: background-color 0.2s ease;
+}
+
+.give-advice:hover {
+  background-color: #007000;
+}
+
+.give-advice:hover .hover-bulb {
+  display: inline-block;
+}
+
+.give-advice:active {
+  background-color: #008000;
+}
+
+.give-advice:active .hover-bulb {
+  display: none;
+}
+
+.give-advice:active .active-bulb {
+  display: inline-block;
+  color: #ffff00;
+}
+
+.footer {
+  display: flex;
+  gap: 5px;
+  font-size: 11px;
+  justify-content: center;
+  color: #808080;
+  margin-bottom: 10px;
+}
+
+.footer a {
+  text-decoration: none;
+  color: #008BFF;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 640px) {
+  .joke-advice-body {
+    font-size: 18px;
+  }
+
+  .controls {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .primary-button {
+    flex: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .joke-advice-body {
+    font-size: 20px;
+  }
+
+  .controls {
+    justify-content: center;
+    flex-grow: 0;
+    width: 500px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .joke-advice-container {
+    max-width: 850px;
+  }
+
+  .joke-advice-body {
+    font-size: 25px;
+  }
+}

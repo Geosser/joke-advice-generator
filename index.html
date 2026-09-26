@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joke & Advice Generator</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha512-QeR2VH+lsBE5LSAe1Q5EnTBbe7XTBubt8dG93Y7gidSgdMCr8nVqKcfKAMyN96SV8KDbZVTDXChatu5G2KQGzg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Jokes & Advice Generator</title>
   </head>
   <body>
     <header>
@@ -15,10 +20,18 @@
 
     <main class="container">
       <div class="joke-advice-container">
+        <div>
+          <button class="copy" title="Copy">
+            <i class="fa-regular fa-copy copy-hover"></i>
+            <i class="fa-solid fa-copy copy-active"></i>
+            <i class="fa-solid fa-check copy-copied"></i>
+          </button>
+        </div>
+
         <div class="title">Advice #1</div>
 
-        <div class="joke-adice-body">
-          The biggest challenge is not the problem itself, but managing your reaction to it.
+        <div class="joke-advice-body">
+          "The biggest challenge is not the problem itself, but managing your reaction to it."
         </div>
 
         <div class="joke-advice-credits">
@@ -27,17 +40,28 @@
       </div>
 
       <div class="controls">
-        <button class="tell-a-joke">TELL ME A JOKE</button>
-        <button class="give-advice">GIVE ME ADICE</button>
+        <button class="primary-button tell-a-joke">
+          TELL ME A JOKE
+          <i class="fa-regular fa-face-grin-squint-tears hover-laugh"></i>
+          <i class="fa-solid fa-face-grin-squint-tears active-laugh"></i>
+        </button>
+        <button class="primary-button give-advice">
+          GIVE ME ADVICE
+          <i class="fa-regular fa-lightbulb hover-bulb"></i>
+          <i class="fa-solid fa-lightbulb active-bulb"></i>
+        </button>
       </div>
     </main>
 
     <footer>
-      <div class="api-provider">
-        API Powered by <a href="#">advice slip</a> 
-      </div>
-      <div class="developer">
-        Developed by <a href="#">Geosser</a>
+      <div class="footer">
+        <div class="api-provider">
+          API Powered by <a href="#">advice slip</a> & <a href="#">Jokes</a>
+        </div>
+        |
+        <div class="developer">
+          Developed by <a href="#">Geosser</a>
+        </div>
       </div>
     </footer>
   </body>
