@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="icon" type="image/svg+xml" href="g-logo.svg">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha512-QeR2VH+lsBE5LSAe1Q5EnTBbe7XTBubt8dG93Y7gidSgdMCr8nVqKcfKAMyN96SV8KDbZVTDXChatu5G2KQGzg==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <link rel="stylesheet" href="style.css">
@@ -13,39 +15,30 @@
   <body>
     <header>
       <div class="header">
-        <a href="index.html" class="logo">Geosser<span>Jokes</span></a>
-        <p class="catchphrase">Laugh now, cry later. | Smarter, not harder.</p>
+        <span class="logo">
+          <img src="g-logo.svg" alt="Logo">
+          Geosser
+        </span>
+        <a href="index.html">Jokes & Advices</a>
       </div>
     </header>
 
     <main class="container">
-      <div class="joke-advice-container">
-        <div>
-          <button class="copy" title="Copy">
-            <i class="fa-regular fa-copy copy-hover"></i>
-            <i class="fa-solid fa-copy copy-active"></i>
-            <i class="fa-solid fa-check copy-copied"></i>
-          </button>
-        </div>
-
-        <div class="title">Advice #1</div>
+      <div class="joke-advice-container js-joke-advice-container">
+        <div class="info">Welcome to my Jokes and Advices website</div>
 
         <div class="joke-advice-body">
-          "The biggest challenge is not the problem itself, but managing your reaction to it."
-        </div>
-
-        <div class="joke-advice-credits">
-          &mdash; Wisdom Daily
+          What do you want to hear today?
         </div>
       </div>
 
       <div class="controls">
-        <button class="primary-button tell-a-joke">
+        <button class="primary-button tell-a-joke js-tell-a-joke">
           TELL ME A JOKE
           <i class="fa-regular fa-face-grin-squint-tears hover-laugh"></i>
           <i class="fa-solid fa-face-grin-squint-tears active-laugh"></i>
         </button>
-        <button class="primary-button give-advice">
+        <button class="primary-button give-advice js-give-advice">
           GIVE ME ADVICE
           <i class="fa-regular fa-lightbulb hover-bulb"></i>
           <i class="fa-solid fa-lightbulb active-bulb"></i>
@@ -56,13 +49,15 @@
     <footer>
       <div class="footer">
         <div class="api-provider">
-          API Powered by <a href="#">advice slip</a> & <a href="#">Jokes</a>
+          APIs Powered by <a href="https://v2.jokeapi.dev/" target="_blank">JokeAPI</a> & <a href="https://api.adviceslip.com/" target="_blank">Advice Slip</a>
         </div>
         |
         <div class="developer">
-          Developed by <a href="#">Geosser</a>
+          Developed by <a href="https://github.com/geosser" target="_blank">Geosser</a>
         </div>
       </div>
     </footer>
+
+    <script src="script.js"></script>
   </body>
 </html>
