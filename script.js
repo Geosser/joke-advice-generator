@@ -25,6 +25,7 @@ async function getAdvice() {
 let timeoutId;
 
 const contentContainer = document.querySelector('.js-joke-advice-container');
+const banner = document.querySelector('.js-banner');
 
 const tellAJokeButton = document.querySelector('.js-tell-a-joke');
 
@@ -32,6 +33,8 @@ tellAJokeButton.addEventListener('click', () => {
   if (timeoutId) {
     clearTimeout(timeoutId);
   }
+
+  banner.classList.add('hide');
 
   tellAJokeButton.disabled = true;
   giveAdviceButton.disabled = true;
@@ -46,6 +49,8 @@ giveAdviceButton.addEventListener('click', () => {
   if (timeoutId) {
     clearTimeout(timeoutId);
   }
+
+  banner.classList.add('hide');
 
   giveAdviceButton.disabled = true;
   tellAJokeButton.disabled = true;
@@ -62,6 +67,7 @@ async function renderJoke() {
 
     const copyButton = document.querySelector('.js-copy');
     copyButton.addEventListener('click', async () =>  {
+      banner.classList.add('hide');
       const text = document.querySelector('.js-joke').innerText;
       await copyToClipboard(text);
     });
@@ -73,7 +79,20 @@ async function renderJoke() {
 
   } catch (error) {
     console.error('Unexpected error occured', error);
-    contentContainer.innerHTML = `<div>${error}. Please try again later.</div>`;
+
+    banner.classList.remove('hide');
+
+    banner.innerHTML = `
+      <div>
+        <i class="fa-solid fa-xmark not-safe"></i>
+        ${error}. Please try again later.
+      </div>
+    `;
+
+    contentContainer.innerHTML = `
+      <div><i class="fa-solid fa-face-frown"></i></div>
+    `;
+
     timeoutId = setTimeout(() => {
       giveAdviceButton.disabled = false;
       tellAJokeButton.disabled = false;
@@ -89,6 +108,7 @@ async function renderAdvice() {
 
     const copyButton = document.querySelector('.js-copy');
     copyButton.addEventListener('click', async () =>  {
+      banner.classList.add('hide');
       const text = document.querySelector('.js-advice').innerText;
       await copyToClipboard(text);
     });
@@ -100,7 +120,20 @@ async function renderAdvice() {
 
   } catch (error) {
     console.error('Unexpected error occured', error);
-    contentContainer.innerHTML = `<div>${error}. Please try again later.</div>`;
+    
+    banner.classList.remove('hide');
+
+    banner.innerHTML = `
+      <div>
+        <i class="fa-solid fa-xmark not-safe"></i>
+        ${error}. Please try again later.
+      </div>
+    `;
+
+    contentContainer.innerHTML = `
+      <div><i class="fa-solid fa-face-frown"></i></div>
+    `;
+
     timeoutId = setTimeout(() => {
       giveAdviceButton.disabled = false;
       tellAJokeButton.disabled = false;
@@ -170,15 +203,32 @@ async function copyToClipboard(text) {
 
     copyButton.innerHTML = `<i class="fa-solid fa-check copied"></i>`;
 
+    banner.classList.remove('hide');
+    banner.innerHTML = `
+      <div>
+        <i class="fa-solid fa-check copied"></i>
+        copied
+      </div>
+    `;
+
     setTimeout(() => {
       copyButton.innerHTML = `
         <i class="fa-regular fa-copy copy-hover"></i>
         <i class="fa-solid fa-copy copy-active"></i>
       `;
       copyButton.disabled = false;
+
+      banner.classList.add('hide');
     }, 2000);
 
   } catch (error) {
-    contentContainer.innerHTML = `Failed to copy. Please copy manually.`;
+    banner.classList.remove('hide');
+
+    banner.innerHTML = `
+      <div>
+        <i class="fa-solid fa-xmark not-safe"></i>
+        Failed to copy. Please copy manually.
+      </div>
+    `;
   }
 }

@@ -6,6 +6,10 @@
   font-family: roboto, Montserrat, "san-serif";
 }
 
+.hide {
+  display: none;
+}
+
 body {
   background-color: #bfc2c2;
 }
@@ -16,6 +20,7 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
+  margin-bottom: 10px;
 }
 
 .logo {
@@ -47,6 +52,16 @@ body {
   align-items: center;
   min-height: 80vh;
   gap: 20px;
+}
+
+.banner {
+  background-color: #ffffff;
+  padding: 5px;
+  border-radius: 6px;
+  align-self: end;
+  margin-right: 20px;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
+  font-size: 10px;
 }
 
 .joke-advice-container {
@@ -203,6 +218,7 @@ body {
   justify-content: center;
   color: #808080;
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .footer a {
