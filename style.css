@@ -71,8 +71,7 @@ body {
   font-size: 15px;
 }
 
-.copy .copy-active,
-.copy .copy-copied {
+.copy .copy-active{
   display: none;
 }
 
@@ -84,7 +83,7 @@ body {
   display: inline-block;
 }
 
-.copy-copied {
+.copied {
   color: #008000;
 }
 
@@ -96,8 +95,11 @@ body {
 
 .disclaimer {
   color: #525252;
-  font-size: 15px;
+  font-size: 13px;
   margin-bottom: 15px;
+  background-color: #c4c4c4;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .safe {

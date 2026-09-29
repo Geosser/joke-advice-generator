@@ -24,8 +24,7 @@ async function getAdvice() {
 
 let timeoutId;
 
-const jokeContainer = document.querySelector('.js-joke-advice-container');
-const adviceContainer = document.querySelector('.js-joke-advice-container');
+const contentContainer = document.querySelector('.js-joke-advice-container');
 
 const tellAJokeButton = document.querySelector('.js-tell-a-joke');
 
@@ -37,7 +36,7 @@ tellAJokeButton.addEventListener('click', () => {
   tellAJokeButton.disabled = true;
   giveAdviceButton.disabled = true;
 
-  jokeContainer.innerHTML = 'Loading joke...';
+  contentContainer.innerHTML = 'Loading joke...';
   renderJoke();
 });
 
@@ -51,7 +50,7 @@ giveAdviceButton.addEventListener('click', () => {
   giveAdviceButton.disabled = true;
   tellAJokeButton.disabled = true;
 
-  adviceContainer.innerHTML = 'Loading advice...';
+  contentContainer.innerHTML = 'Loading advice...';
   renderAdvice();
 });
 
@@ -59,15 +58,22 @@ async function renderJoke() {
   try {
     const html = await tellAJoke();
 
-    jokeContainer.innerHTML = html;
+    contentContainer.innerHTML = html;
+
+    const copyButton = document.querySelector('.js-copy');
+    copyButton.addEventListener('click', async () =>  {
+      const text = document.querySelector('.js-joke').innerText;
+      await copyToClipboard(text);
+    });
 
     timeoutId = setTimeout(() => {
       tellAJokeButton.disabled = false;
       giveAdviceButton.disabled = false;
     }, 2000);
+
   } catch (error) {
     console.error('Unexpected error occured', error);
-    jokeContainer.innerHTML = `<div>${error}. Please try again later.</div>`;
+    contentContainer.innerHTML = `<div>${error}. Please try again later.</div>`;
     timeoutId = setTimeout(() => {
       giveAdviceButton.disabled = false;
       tellAJokeButton.disabled = false;
@@ -79,7 +85,13 @@ async function renderAdvice() {
   try {
     const html = await giveAdvice();
 
-    adviceContainer.innerHTML = html;
+    contentContainer.innerHTML = html;
+
+    const copyButton = document.querySelector('.js-copy');
+    copyButton.addEventListener('click', async () =>  {
+      const text = document.querySelector('.js-advice').innerText;
+      await copyToClipboard(text);
+    });
 
     timeoutId = setTimeout(() => {
       giveAdviceButton.disabled = false;
@@ -88,7 +100,7 @@ async function renderAdvice() {
 
   } catch (error) {
     console.error('Unexpected error occured', error);
-    jokeContainer.innerHTML = `<div>${error}. Please try again later.</div>`;
+    contentContainer.innerHTML = `<div>${error}. Please try again later.</div>`;
     timeoutId = setTimeout(() => {
       giveAdviceButton.disabled = false;
       tellAJokeButton.disabled = false;
@@ -101,10 +113,9 @@ async function tellAJoke() {
 
   const jokeHTML = `
     <div>
-      <button class="copy" title="Copy">
+      <button class="copy js-copy" title="Copy Joke">
         <i class="fa-regular fa-copy copy-hover"></i>
         <i class="fa-solid fa-copy copy-active"></i>
-        <i class="fa-solid fa-check copy-copied"></i>
       </button>
     </div>
 
@@ -120,7 +131,7 @@ async function tellAJoke() {
       <span>explicit: ${joke.flags.explicit ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
     </div>
 
-    <div class="joke-advice-body">
+    <div class="joke-advice-body js-joke">
       ${joke.joke}
     </div>
   `;
@@ -134,19 +145,40 @@ async function giveAdvice() {
 
   const adviceHTML = `
     <div>
-      <button class="copy" title="Copy">
+      <button class="copy js-copy" title="Copy Advice">
         <i class="fa-regular fa-copy copy-hover"></i>
         <i class="fa-solid fa-copy copy-active"></i>
-        <i class="fa-solid fa-check copy-copied"></i>
       </button>
     </div>
 
     <div class="info">Advice #${advice.id}</div>
 
-    <div class="joke-advice-body">
+    <div class="joke-advice-body js-advice">
       ${advice.advice}
     </div>
   `;
 
   return adviceHTML;
+}
+
+async function copyToClipboard(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+
+    const copyButton = document.querySelector('.js-copy');
+    copyButton.disabled = true;
+
+    copyButton.innerHTML = `<i class="fa-solid fa-check copied"></i>`;
+
+    setTimeout(() => {
+      copyButton.innerHTML = `
+        <i class="fa-regular fa-copy copy-hover"></i>
+        <i class="fa-solid fa-copy copy-active"></i>
+      `;
+      copyButton.disabled = false;
+    }, 2000);
+
+  } catch (error) {
+    contentContainer.innerHTML = `Failed to copy. Please copy manually.`;
+  }
 }
