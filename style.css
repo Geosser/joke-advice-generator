@@ -149,12 +149,16 @@ body {
   display: none;
 }
 
-.tell-a-joke {
+.tell-a-joke,
+.save-joke-customisation,
+.reset-joke-customisation {
   background-color: #008BFF;
   transition: background-color 0.2s ease;
 }
 
-.tell-a-joke:hover{
+.tell-a-joke:hover,
+.save-joke-customisation:hover,
+.reset-joke-customisation:hover {
   background-color: #017bdf;
 }
 
@@ -162,7 +166,9 @@ body {
   display: inline-block;
 }
 
-.tell-a-joke:active {
+.tell-a-joke:active,
+.save-joke-customisation:active,
+.reset-joke-customisation:active {
   background-color: #008BFF;
 }
 
@@ -211,6 +217,52 @@ body {
   opacity: 0.5;
 }
 
+.joke-popup-card {
+  background-color: #ffffff;
+  width: 80vw;
+  max-width: 500px;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.joke-customise-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.categories,
+.blacklist,
+.type,
+.amount {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.custom-category,
+.custom-blacklist,
+.custom-type,
+.custom-amount {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.categories input:hover,
+.custom-blacklist span:hover,
+.custom-type input:hover {
+  cursor: pointer;
+}
+
+.customise-heading {
+  font-weight: 500;
+}
+
 .footer {
   display: flex;
   gap: 5px;
@@ -231,6 +283,16 @@ body {
 }
 
 @media (min-width: 640px) {
+  .joke-popup-card {
+    width: 500px;
+    padding: 40px;
+  }
+
+  .joke-customise-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
   .joke-advice-body {
     font-size: 18px;
   }
