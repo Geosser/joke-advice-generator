@@ -26,7 +26,7 @@
     <main class="container">
       <div class="banner js-banner hide"></div>
 
-      <div class="joke-popup-card">
+      <div class="joke-popup-card hide">
         <h3>Joke customisation</h3>
 
         <div class="joke-customise-container">
@@ -147,6 +147,65 @@
 
           <div class="reset-button">
             <button class="primary-button reset-joke-customisation">Reset Customisation</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="advice-popup-card">
+        <h3>Advice customisation</h3>
+
+        <div class="advice-customise-container">
+          <div class="customise-heading">Select Advice category</div>
+
+          <div>
+            <input type="radio" name="category" id="Random" value="Random">
+            <label for="Random">Random</label>
+          </div>
+
+          <div class="custom-advice">
+            <div>
+              <input type="radio" name="category" id="custom-advice" value="Custom">
+              <label for="custom-advice">Custom:</label>
+            </div>
+
+            <div class="advice-custom-category">
+              <div>
+                <span>
+                  <input type="radio" name="custom-advice-search" id="advice-id" value="advice-id">
+                  <label for="advice-id">Search by ID:</label>
+                </span>
+
+                <span>
+                  <label for="id-number">ID no.:</label>
+                  <input type="number" id="id-number" min="1" max="10">
+                </span>
+              </div>
+              
+              <div>
+                <span>
+                  <input type="radio" name="custom-advice-search" id="advice-key" value="advice-key">
+                  <label for="advice-key">Search by advice keyword:</label>
+                </span>
+
+                <span>
+                  <label for="keyword">Keyword:</label>
+                  <input type="text" id="keyword" placeholder="Enter keyword">
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <input type="radio" name="category" id="daily-advice" value="daily-advice">
+            <label for="daily-advice">Advice of the day</label>
+          </div>
+
+          <div class="save-button">
+            <button class="primary-button save-advice-customisation">Save Customisation</button>
+          </div>
+
+          <div class="reset-button">
+            <button class="primary-button reset-advice-customisation">Reset Customisation</button>
           </div>
         </div>
       </div>
