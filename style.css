@@ -350,6 +350,31 @@ body {
   cursor: pointer;
 }
 
+.categories label:hover,
+.custom-blacklist label:hover,
+.custom-type label:hover,
+.advice-popup-card label:hover {
+  cursor: pointer;
+}
+
+.categories input:disabled + label,
+.custom-blacklist input:disabled + label,
+.custom-type input:disabled + label,
+.amount:has(input:disabled) label,
+.advice-popup-card input:disabled + label,
+.advice-custom-category:has(input:disabled) label {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.categories input:disabled,
+.custom-blacklist input:disabled,
+.custom-type input:disabled,
+.amount input:disabled,
+.advice-popup-card input:disabled {
+  cursor: not-allowed;
+}
+
 .customise-heading {
   font-weight: 500;
 }
