@@ -20,192 +20,215 @@
           Geosser
         </span>
         <a href="index.html">Jokes & Advices</a>
+
+        <div class="menu">
+          <button class="menu-button js-menu-button">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+
+          <div class="menu-items js-menu-items">
+            <ul>
+              <li class="js-open-joke-popup">Customise Joke</li>
+              <li class="js-open-advice-popup">Customise Advice</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </header>
 
     <main class="container">
       <div class="banner js-banner hide"></div>
 
-      <div class="joke-popup-card hide">
-        <h3>Joke customisation</h3>
+      <div class="popups-container">
+        <div class="joke-popup-card js-joke-popup-card hide-popup">
+          <button class="close-popup js-close-joke-popup">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
 
-        <div class="joke-customise-container">
-          <div class="categories">
-            <div class="customise-heading">Select a joke category</div>
+          <h3>Joke customisation</h3>
 
-            <div>
-              <input type="radio" name="category" id="Any" value="Any">
-              <label for="Any">Any</label>
-            </div>
+          <div class="joke-customise-container">
+            <div class="categories">
+              <div class="customise-heading">Select a joke category</div>
 
-            <div>
               <div>
-                <input type="radio" name="category" id="Custom" value="Custom">
-                <label for="Custom">Custom:</label>
+                <input type="radio" name="category" id="Any" value="Any">
+                <label for="Any">Any</label>
               </div>
 
-              <div class="custom-category">
+              <div>
+                <div>
+                  <input type="radio" name="category" id="Custom" value="Custom">
+                  <label for="Custom">Custom:</label>
+                </div>
+
+                <div class="custom-category">
+                  <span>
+                    <input type="checkbox" id="Programming" value="Programming">
+                    <label for="Programming">Programming</label>
+                  </span>
+
+                  <span>
+                    <input type="checkbox" id="Misc" value="Misc">
+                    <label for="Misc">Misc</label>
+                  </span>
+                  
+                  <span>
+                    <input type="checkbox" id="Dark" value="Dark">
+                    <label for="Dark">Dark</label>
+                  </span>
+
+                  <span>
+                    <input type="checkbox" id="Pun" value="Pun">
+                    <label for="Pun">Pun</label>
+                  </span>
+
+                  <span>
+                    <input type="checkbox" id="Spooky" value="Spooky">
+                    <label for="Spooky">Spooky</label>
+                  </span>
+
+                  <span>
+                    <input type="checkbox" id="Christmas" value="Christmas">
+                    <label for="Christmas">Christmas</label>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="blacklist">
+              <div class="customise-heading">Select joke type you don't want</div>
+
+              <div class="custom-blacklist">
                 <span>
-                  <input type="checkbox" id="Programming" value="Programming">
-                  <label for="Programming">Programming</label>
+                  <input type="checkbox" id="nsfw" value="nsfw">
+                  <label for="nsfw">nsfw</label>
                 </span>
 
                 <span>
-                  <input type="checkbox" id="Misc" value="Misc">
-                  <label for="Misc">Misc</label>
-                </span>
-                
-                <span>
-                  <input type="checkbox" id="Dark" value="Dark">
-                  <label for="Dark">Dark</label>
+                  <input type="checkbox" id="religious" value="religious">
+                  <label for="religious">religious</label>
                 </span>
 
                 <span>
-                  <input type="checkbox" id="Pun" value="Pun">
-                  <label for="Pun">Pun</label>
+                  <input type="checkbox" id="political" value="political">
+                  <label for="political">political</label>
                 </span>
 
                 <span>
-                  <input type="checkbox" id="Spooky" value="Spooky">
-                  <label for="Spooky">Spooky</label>
+                  <input type="checkbox" id="racist" value="racist">
+                  <label for="racist">racist</label>
                 </span>
 
                 <span>
-                  <input type="checkbox" id="Christmas" value="Christmas">
-                  <label for="Christmas">Christmas</label>
+                  <input type="checkbox" id="sexist" value="sexist">
+                  <label for="sexist">sexist</label>
+                </span>
+
+                <span>
+                  <input type="checkbox" id="explicit" value="explicit">
+                  <label for="explicit">explicit</label>
                 </span>
               </div>
             </div>
-          </div>
 
-          <div class="blacklist">
-            <div class="customise-heading">Select joke type you don't want</div>
+            <div class="type">
+              <div class="customise-heading">Select a joke type</div>
 
-            <div class="custom-blacklist">
-              <span>
-                <input type="checkbox" id="nsfw" value="nsfw">
-                <label for="nsfw">nsfw</label>
-              </span>
+              <div class="custom-type">
+                <span>
+                  <input type="radio" name="joke-type" id="single" value="single">
+                  <label for="single">Single</label>
+                </span>
 
-              <span>
-                <input type="checkbox" id="religious" value="religious">
-                <label for="religious">religious</label>
-              </span>
-
-              <span>
-                <input type="checkbox" id="political" value="political">
-                <label for="political">political</label>
-              </span>
-
-              <span>
-                <input type="checkbox" id="racist" value="racist">
-                <label for="racist">racist</label>
-              </span>
-
-              <span>
-                <input type="checkbox" id="sexist" value="sexist">
-                <label for="sexist">sexist</label>
-              </span>
-
-              <span>
-                <input type="checkbox" id="explicit" value="explicit">
-                <label for="explicit">explicit</label>
-              </span>
+                <span>
+                  <input type="radio" name="joke-type" id="twopart" value="twopart">
+                  <label for="twopart">Twopart</label>
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div class="type">
-            <div class="customise-heading">Select a joke type</div>
+            <div class="amount">
+              <div class="customise-heading">Enter amount of jokes you want</div>
 
-            <div class="custom-type">
-              <span>
-                <input type="radio" name="joke-type" id="single" value="single">
-                <label for="single">Single</label>
-              </span>
-
-              <span>
-                <input type="radio" name="joke-type" id="twopart" value="twopart">
-                <label for="twopart">Twopart</label>
-              </span>
+              <div class="custom-amount">
+                <span>
+                  <label for="amount">Amount:</label>
+                  <input type="number" id="amount" value="1" min="1" max="10">
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div class="amount">
-            <div class="customise-heading">Enter amount of jokes you want</div>
-
-            <div class="custom-amount">
-              <span>
-                <label for="amount">Amount:</label>
-                <input type="number" id="amount" value="1" min="1" max="10">
-              </span>
+            <div class="save-button">
+              <button class="primary-button save-joke-customisation">Save Customisation</button>
             </div>
-          </div>
 
-          <div class="save-button">
-            <button class="primary-button save-joke-customisation">Save Customisation</button>
-          </div>
-
-          <div class="reset-button">
-            <button class="primary-button reset-joke-customisation">Reset Customisation</button>
+            <div class="reset-button">
+              <button class="primary-button reset-joke-customisation">Reset Customisation</button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="advice-popup-card">
-        <h3>Advice customisation</h3>
+        <div class="advice-popup-card js-advice-popup-card hide-popup">
+          <button class="close-popup js-close-advice-popup">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
 
-        <div class="advice-customise-container">
-          <div class="customise-heading">Select Advice category</div>
+          <h3>Advice customisation</h3>
 
-          <div>
-            <input type="radio" name="category" id="Random" value="Random">
-            <label for="Random">Random</label>
-          </div>
+          <div class="advice-customise-container">
+            <div class="customise-heading">Select Advice category</div>
 
-          <div class="custom-advice">
             <div>
-              <input type="radio" name="category" id="custom-advice" value="Custom">
-              <label for="custom-advice">Custom:</label>
+              <input type="radio" name="category" id="Random" value="Random">
+              <label for="Random">Random</label>
             </div>
 
-            <div class="advice-custom-category">
+            <div class="custom-advice">
               <div>
-                <span>
-                  <input type="radio" name="custom-advice-search" id="advice-id" value="advice-id">
-                  <label for="advice-id">Search by ID:</label>
-                </span>
-
-                <span>
-                  <label for="id-number">ID no.:</label>
-                  <input type="number" id="id-number" min="1" max="10">
-                </span>
+                <input type="radio" name="category" id="custom-advice" value="Custom">
+                <label for="custom-advice">Custom:</label>
               </div>
-              
-              <div>
-                <span>
-                  <input type="radio" name="custom-advice-search" id="advice-key" value="advice-key">
-                  <label for="advice-key">Search by advice keyword:</label>
-                </span>
 
-                <span>
-                  <label for="keyword">Keyword:</label>
-                  <input type="text" id="keyword" placeholder="Enter keyword">
-                </span>
+              <div class="advice-custom-category">
+                <div>
+                  <span>
+                    <input type="radio" name="custom-advice-search" id="advice-id" value="advice-id">
+                    <label for="advice-id">Search by ID:</label>
+                  </span>
+
+                  <span>
+                    <label for="id-number">ID no.:</label>
+                    <input type="number" id="id-number" min="1" max="10">
+                  </span>
+                </div>
+                
+                <div>
+                  <span>
+                    <input type="radio" name="custom-advice-search" id="advice-key" value="advice-key">
+                    <label for="advice-key">Search by advice keyword:</label>
+                  </span>
+
+                  <span>
+                    <label for="keyword">Keyword:</label>
+                    <input type="text" id="keyword" placeholder="Enter keyword">
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div>
-            <input type="radio" name="category" id="daily-advice" value="daily-advice">
-            <label for="daily-advice">Advice of the day</label>
-          </div>
+            <div>
+              <input type="radio" name="category" id="daily-advice" value="daily-advice">
+              <label for="daily-advice">Advice of the day</label>
+            </div>
 
-          <div class="save-button">
-            <button class="primary-button save-advice-customisation">Save Customisation</button>
-          </div>
+            <div class="save-button">
+              <button class="primary-button save-advice-customisation">Save Customisation</button>
+            </div>
 
-          <div class="reset-button">
-            <button class="primary-button reset-advice-customisation">Reset Customisation</button>
+            <div class="reset-button">
+              <button class="primary-button reset-advice-customisation">Reset Customisation</button>
+            </div>
           </div>
         </div>
       </div>

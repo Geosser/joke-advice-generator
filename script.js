@@ -1,3 +1,67 @@
+const menuButton = document.querySelector('.js-menu-button');
+const menuItems = document.querySelector('.js-menu-items');
+
+const openJokePopupLink = document.querySelector('.js-open-joke-popup');
+const openAdvicePopupLink = document.querySelector('.js-open-advice-popup');
+
+const jokePopup = document.querySelector('.js-joke-popup-card');
+const advicePopup = document.querySelector('.js-advice-popup-card');
+
+const closeJokePopupButton = document.querySelector('.js-close-joke-popup');
+const closeAdvicePopupButton = document.querySelector('.js-close-advice-popup');
+
+menuButton.addEventListener('click', () => {
+  if (!menuItems.classList.contains('open')) {
+    menuItems.classList.add('open');
+  } else {
+    menuItems.classList.remove('open');
+  }
+});
+
+openJokePopupLink.addEventListener('click', () => {
+  closeJokePopup();
+});
+
+closeJokePopupButton.addEventListener('click', () => {
+  closeJokePopup();
+});
+
+openAdvicePopupLink.addEventListener('click', () => {
+  closeAdvicePopup();
+});
+
+closeAdvicePopupButton.addEventListener('click', () => {
+  closeAdvicePopup()
+});
+
+function closeJokePopup() {
+  menuItems.classList.remove('open');
+
+  if (!advicePopup.classList.contains('hide-popup')) {
+    advicePopup.classList.add('hide-popup');
+  }
+
+  if (jokePopup.classList.contains('hide-popup')) {
+    jokePopup.classList.remove('hide-popup');
+  } else {
+    jokePopup.classList.add('hide-popup');
+  }
+}
+
+function closeAdvicePopup() {
+  menuItems.classList.remove('open');
+
+  if (!jokePopup.classList.contains('hide-popup')) {
+    jokePopup.classList.add('hide-popup')
+  }
+  
+  if (advicePopup.classList.contains('hide-popup')) {
+    advicePopup.classList.remove('hide-popup');
+  } else {
+    advicePopup.classList.add('hide-popup');
+  }
+}
+
 async function getJoke() {
   const response = await fetch('https://v2.jokeapi.dev/joke/Any?type=single');
   
