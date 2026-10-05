@@ -13,29 +13,32 @@ const closeAdvicePopupButton = document.querySelector('.js-close-advice-popup');
 menuButton.addEventListener('click', () => {
   if (!menuItems.classList.contains('open')) {
     menuItems.classList.add('open');
+    menuButton.innerHTML = '<i class="fa-solid fa-xmark"></i>';
   } else {
     menuItems.classList.remove('open');
+    menuButton.innerHTML = '<i class="fa-solid fa-bars"></i>';
   }
 });
 
 openJokePopupLink.addEventListener('click', () => {
-  closeJokePopup();
+  openJokePopup();
 });
 
 closeJokePopupButton.addEventListener('click', () => {
-  closeJokePopup();
+  openJokePopup();
 });
 
 openAdvicePopupLink.addEventListener('click', () => {
-  closeAdvicePopup();
+  openAdvicePopup();
 });
 
 closeAdvicePopupButton.addEventListener('click', () => {
-  closeAdvicePopup()
+  openAdvicePopup()
 });
 
-function closeJokePopup() {
+function openJokePopup() {
   menuItems.classList.remove('open');
+  menuButton.innerHTML = '<i class="fa-solid fa-bars"></i>';
 
   if (!advicePopup.classList.contains('hide-popup')) {
     advicePopup.classList.add('hide-popup');
@@ -48,8 +51,9 @@ function closeJokePopup() {
   }
 }
 
-function closeAdvicePopup() {
+function openAdvicePopup() {
   menuItems.classList.remove('open');
+  menuButton.innerHTML = '<i class="fa-solid fa-bars"></i>';
 
   if (!jokePopup.classList.contains('hide-popup')) {
     jokePopup.classList.add('hide-popup')
