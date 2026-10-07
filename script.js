@@ -66,8 +66,175 @@ function openAdvicePopup() {
   }
 }
 
+let url = JSON.parse(localStorage.getItem('url')) || 'https://v2.jokeapi.dev/joke/Any?Single';
+
+const jokeConfig = JSON.parse(localStorage.getItem('jokeConfig')) || {
+  categories: ['Any'],
+  blacklistFlags: [],
+  type: 'Single',
+  amount: 1
+}
+
+const saveJokeCustomisationButton = document.querySelector('.js-save-joke-customisation');
+
+const resetJokeCustomisationButton = document.querySelector('.js-reset-joke-customisation');
+
+saveJokeCustomisationButton.addEventListener('click', () => {
+  saveJokeCustomisation();
+});
+
+resetJokeCustomisationButton.addEventListener('click', () => {
+  resetJokeCustomisation();
+});
+
+const anyJokeRadio = document.querySelector('.js-any-joke-radio');
+const customJokeRadio = document.querySelector('.js-custom-joke-radio');
+const customCategoriesCheckboxes = document.querySelectorAll('.custom-category input[type="checkbox"]');
+
+customJokeRadio.addEventListener('change', (event) => {
+  toggleJokeCustomCategories(true);
+
+  saveJokeCustomisationButton.disabled = true;
+
+  document.querySelector('.js-custom-category')
+    .addEventListener('change', (event) => {
+      saveJokeCustomisationButton.disabled = true;
+
+      customCategoriesCheckboxes.forEach(category => {
+        if (category.checked) {
+          saveJokeCustomisationButton.disabled = false;
+        }
+      });
+    });
+});
+
+anyJokeRadio.addEventListener('change', () => {
+  toggleJokeCustomCategories(false);
+  saveJokeCustomisationButton.disabled = false;
+});
+
+function toggleJokeCustomCategories(enable) {
+  customCategoriesCheckboxes.forEach(category => {
+    category.disabled = !enable;
+    customCategoriesCheckboxes.forEach(category => {
+      if (category.checked) {
+        category.checked = false;
+      }
+    });
+  });
+}
+
+const singleTypeRadio = document.querySelector('.js-single-type-radio');
+const twopartTypeRadio = document.querySelector('.js-twopart-type-radio');
+
+const blacklistFlags = document.querySelectorAll('.js-custom-blacklist input[type="checkbox"]');
+
+let saveJokeTimeoutId;
+let resetJokeTimeoutId;
+
+function saveJokeCustomisation() {
+  if (saveJokeTimeoutId) {
+    clearTimeout(saveJokeTimeoutId);
+  }
+  
+  saveJokeCustomisationButton.innerHTML = 'Customisation Saved';
+
+  saveJokeTimeoutId = setTimeout(() => {
+    saveJokeCustomisationButton.innerHTML = 'Save Customisation';
+  }, 2000);
+
+  if (anyJokeRadio.checked) {
+    jokeConfig.categories = [];
+    jokeConfig.categories.push(anyJokeRadio.value);
+  } else if (customJokeRadio.checked) {
+    jokeConfig.categories = [];
+
+    customCategoriesCheckboxes.forEach(category => {
+      if (category.checked) {
+        jokeConfig.categories.push(category.value);
+      }
+    });
+  }
+
+  if (singleTypeRadio.checked) {
+    jokeConfig.type = singleTypeRadio.value;
+  } else if (twopartTypeRadio.checked) {
+    jokeConfig.type = twopartTypeRadio.value;
+  }
+
+  jokeConfig.blacklistFlags = [];
+
+  blacklistFlags.forEach(flag => {
+    if (flag.checked) {
+      jokeConfig.blacklistFlags.push(flag.value);
+    }
+  });
+
+  url = `https://v2.jokeapi.dev/joke/${jokeConfig.categories.join(',')}?type=${jokeConfig.type}&blacklistFlags=${jokeConfig.blacklistFlags.join(',')}`;
+
+  localStorage.setItem('url', JSON.stringify(url));
+  localStorage.setItem('jokeConfig', JSON.stringify(jokeConfig));
+
+  console.log(url)
+  console.log(jokeConfig);
+}
+
+function resetJokeCustomisation() {
+  localStorage.removeItem('jokeConfig');
+  localStorage.removeItem('url');
+
+  jokeConfig.categories = ['Any'];
+  jokeConfig.blacklistFlags = [];
+  jokeConfig.type = 'Single';
+  jokeConfig.amount = 1;
+
+  applySavedJokeConfigs();
+
+  if (resetJokeTimeoutId) {
+    clearTimeout(resetJokeTimeoutId);
+  }
+
+  resetJokeCustomisationButton.innerHTML = 'Customisation Reset';
+
+  resetJokeTimeoutId = setTimeout(() => {
+    resetJokeCustomisationButton.innerHTML = 'Reset Customisation';
+  }, 2000);
+}
+
+function applySavedJokeConfigs() {
+  if (jokeConfig.categories.includes('Any')) {
+    anyJokeRadio.checked = true;
+    toggleJokeCustomCategories(false);
+  } else {
+    customJokeRadio.checked = true;
+    toggleJokeCustomCategories(true);
+
+    customCategoriesCheckboxes.forEach(checkbox => {
+      checkbox.checked = jokeConfig.categories.includes(checkbox.value);
+    });
+  }
+
+  if (jokeConfig.type === 'Single') {
+    singleTypeRadio.checked = true;
+  } else if (jokeConfig.type === 'twopart') {
+    twopartTypeRadio.checked = true;
+  }
+
+  if (jokeConfig.blacklistFlags.length > 0) {
+    blacklistFlags.forEach(flag => {
+      flag.checked = jokeConfig.blacklistFlags.includes(flag.value);
+    });
+  } else {
+    blacklistFlags.forEach(flag => {
+      flag.checked = false;
+    });
+  }
+}
+
+applySavedJokeConfigs();
+
 async function getJoke() {
-  const response = await fetch('https://v2.jokeapi.dev/joke/Any?type=single');
+  const response = await fetch(url);
   
   if (!response.ok) {
     throw new Error(`Server Error. Response Status: ${response.status}`);

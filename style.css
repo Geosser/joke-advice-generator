@@ -243,6 +243,11 @@ body {
   opacity: 0.5;
 }
 
+.save-joke-customisation:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .give-advice {
   background-color: #008000;
   transition: background-color 0.2s ease;
@@ -336,6 +341,11 @@ body {
   gap: 5px;
 }
 
+.custom-category {
+  padding-top: 10px;
+  padding-left: 30px;
+}
+
 .advice-custom-category div {
   display: flex;
   flex-direction: column;
@@ -343,7 +353,8 @@ body {
 }
 
 .advice-custom-category {
-  padding-left: 40px;
+  padding-top: 10px;
+  padding-left: 30px;
   gap: 10px;
 }
 

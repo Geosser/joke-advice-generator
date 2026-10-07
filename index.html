@@ -52,24 +52,24 @@
               <div class="customise-heading">Select a joke category</div>
 
               <div>
-                <input type="radio" name="joke-category" id="Any" value="Any" checked>
+                <input type="radio" name="joke-category" id="Any" class="js-any-joke-radio" value="Any" checked>
                 <label for="Any">Any</label>
               </div>
 
-              <div>
+              <div class="custom-category-section">
                 <div>
-                  <input type="radio" name="joke-category" id="Custom" value="Custom" disabled>
+                  <input type="radio" name="joke-category" id="Custom" class="js-custom-joke-radio" value="Custom">
                   <label for="Custom">Custom:</label>
                 </div>
 
-                <div class="custom-category">
+                <div class="custom-category js-custom-category">
                   <span>
                     <input type="checkbox" id="Programming" value="Programming" disabled>
                     <label for="Programming">Programming</label>
                   </span>
 
                   <span>
-                    <input type="checkbox" id="Misc" value="Misc" disabled>
+                    <input type="checkbox" id="Misc" value="Miscellaneous" disabled>
                     <label for="Misc">Misc</label>
                   </span>
                   
@@ -97,36 +97,36 @@
             </div>
 
             <div class="blacklist">
-              <div class="customise-heading">Select joke type you don't want</div>
+              <div class="customise-heading">Select joke type you don't want (optional)</div>
 
-              <div class="custom-blacklist">
+              <div class="custom-blacklist js-custom-blacklist">
                 <span>
-                  <input type="checkbox" id="nsfw" value="nsfw" disabled>
+                  <input type="checkbox" id="nsfw" value="nsfw">
                   <label for="nsfw">nsfw</label>
                 </span>
 
                 <span>
-                  <input type="checkbox" id="religious" value="religious" disabled>
+                  <input type="checkbox" id="religious" value="religious">
                   <label for="religious">religious</label>
                 </span>
 
                 <span>
-                  <input type="checkbox" id="political" value="political" disabled>
+                  <input type="checkbox" id="political" value="political">
                   <label for="political">political</label>
                 </span>
 
                 <span>
-                  <input type="checkbox" id="racist" value="racist" disabled>
+                  <input type="checkbox" id="racist" value="racist">
                   <label for="racist">racist</label>
                 </span>
 
                 <span>
-                  <input type="checkbox" id="sexist" value="sexist" disabled>
+                  <input type="checkbox" id="sexist" value="sexist">
                   <label for="sexist">sexist</label>
                 </span>
 
                 <span>
-                  <input type="checkbox" id="explicit" value="explicit" disabled>
+                  <input type="checkbox" id="explicit" value="explicit">
                   <label for="explicit">explicit</label>
                 </span>
               </div>
@@ -137,12 +137,12 @@
 
               <div class="custom-type">
                 <span>
-                  <input type="radio" name="joke-type" id="single" value="single" checked>
+                  <input type="radio" name="joke-type" id="single" class="js-single-type-radio" value="single" checked>
                   <label for="single">Single</label>
                 </span>
 
                 <span>
-                  <input type="radio" name="joke-type" id="twopart" value="twopart" disabled>
+                  <input type="radio" name="joke-type" id="twopart" class="js-twopart-type-radio" value="twopart" disabled>
                   <label for="twopart">Twopart</label>
                 </span>
               </div>
@@ -160,11 +160,11 @@
             </div>
 
             <div class="save-button">
-              <button class="primary-button save-joke-customisation">Save Customisation</button>
+              <button class="primary-button save-joke-customisation js-save-joke-customisation">Save Customisation</button>
             </div>
 
             <div class="reset-button">
-              <button class="primary-button reset-joke-customisation">Reset Customisation</button>
+              <button class="primary-button reset-joke-customisation js-reset-joke-customisation">Reset Customisation</button>
             </div>
           </div>
         </div>
