@@ -17,6 +17,14 @@ body {
   min-height: 100vh;
 }
 
+header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 150;
+}
+
 .header {
   padding: 10px;
   background-color: white;
@@ -24,6 +32,7 @@ body {
   align-items: center;
   gap: 5px;
   margin-bottom: 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .logo {
@@ -94,6 +103,120 @@ body {
   background-color: #008BFF;
 }
 
+.joke-popup-card,
+.advice-popup-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 80vw;
+  max-width: 500px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 10px;
+  position: absolute;
+  top: 180%;
+  right: 0;
+  z-index: 100;
+}
+
+.hide-popup {
+  display: none;
+}
+
+.close-popup {
+  border: none;
+  background-color: transparent;
+  display: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 110;
+  align-self: end;
+  cursor: pointer;
+}
+
+.joke-customise-container,
+.advice-customise-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.categories,
+.blacklist,
+.type,
+.amount,
+.custom-advice {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.custom-category,
+.custom-blacklist,
+.custom-type,
+.custom-amount,
+.advice-custom-category {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.custom-category {
+  padding-top: 10px;
+  padding-left: 30px;
+}
+
+.advice-custom-category div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.advice-custom-category {
+  padding-top: 10px;
+  padding-left: 30px;
+  gap: 10px;
+}
+
+.categories input:hover,
+.custom-blacklist input:hover,
+.custom-type input:hover,
+.advice-popup-card input[type="radio"]:hover {
+  cursor: pointer;
+}
+
+.categories label:hover,
+.custom-blacklist label:hover,
+.custom-type label:hover,
+.advice-popup-card label:hover {
+  cursor: pointer;
+}
+
+.categories input:disabled + label,
+.custom-blacklist input:disabled + label,
+.custom-type input:disabled + label,
+.amount:has(input:disabled) label,
+.advice-popup-card input:disabled + label,
+.advice-custom-category:has(input:disabled) label {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.categories input:disabled,
+.custom-blacklist input:disabled,
+.custom-type input:disabled,
+.amount input:disabled,
+.advice-popup-card input:disabled {
+  cursor: not-allowed;
+}
+
+.customise-heading {
+  font-weight: 500;
+}
+
 .container {
   flex: 1;
   display: flex;
@@ -127,12 +250,29 @@ body {
   position: relative;
 }
 
+.welcome-info {
+  margin-bottom: 10px;
+  color: #525252;
+  font-size: 13px;
+  text-align: center;
+}
+
+.joke-content {
+  border: #a8a8a8 1px solid;
+  padding: 10px;
+  border-radius: 10px;
+  width: 95%;
+  position: relative;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .copy {
   border: none;
   background-color: transparent;
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 3px;
+  right: 2px;
   cursor: pointer;
   font-size: 15px;
 }
@@ -150,18 +290,30 @@ body {
 }
 
 .copied {
+  position: absolute;
+  font-size: 8px;
   color: #008000;
+  border: #008000 1px solid;
+  border-radius: 50%;
+  padding: 3px;
+  top: 0;
+  right: 0;
 }
 
 .info {
-  margin-bottom: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 95%;
+  margin-bottom: 10px;
   color: #525252;
-  text-align: center;
+  font-size: 13px;
 }
 
 .disclaimer {
-  color: #525252;
-  font-size: 13px;
+  color: #646464;
+  font-size: 12px;
   margin-bottom: 15px;
   background-color: #c4c4c4;
   padding: 5px;
@@ -170,15 +322,17 @@ body {
 
 .safe {
   color: #008000;
+  font-size: 10px;
 }
 
 .not-safe {
-  color: #ff3535;
+  color: #fc5555;
+  font-size: 10px;
 }
 
 .joke-advice-body {
   text-align: center;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .controls {
@@ -279,121 +433,6 @@ body {
   opacity: 0.5;
 }
 
-.joke-popup-card,
-.advice-popup-card {
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 80vw;
-  max-width: 500px;
-  max-height: 70vh;
-  overflow-y: auto;
-  padding: 10px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 100;
-}
-
-.hide-popup {
-  display: none;
-}
-
-.close-popup {
-  border: none;
-  background-color: transparent;
-  display: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 110;
-  align-self: end;
-  cursor: pointer;
-}
-
-.joke-customise-container,
-.advice-customise-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.categories,
-.blacklist,
-.type,
-.amount,
-.custom-advice {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.custom-category,
-.custom-blacklist,
-.custom-type,
-.custom-amount,
-.advice-custom-category {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.custom-category {
-  padding-top: 10px;
-  padding-left: 30px;
-}
-
-.advice-custom-category div {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.advice-custom-category {
-  padding-top: 10px;
-  padding-left: 30px;
-  gap: 10px;
-}
-
-.categories input:hover,
-.custom-blacklist input:hover,
-.custom-type input:hover,
-.advice-popup-card input[type="radio"]:hover {
-  cursor: pointer;
-}
-
-.categories label:hover,
-.custom-blacklist label:hover,
-.custom-type label:hover,
-.advice-popup-card label:hover {
-  cursor: pointer;
-}
-
-.categories input:disabled + label,
-.custom-blacklist input:disabled + label,
-.custom-type input:disabled + label,
-.amount:has(input:disabled) label,
-.advice-popup-card input:disabled + label,
-.advice-custom-category:has(input:disabled) label {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.categories input:disabled,
-.custom-blacklist input:disabled,
-.custom-type input:disabled,
-.amount input:disabled,
-.advice-popup-card input:disabled {
-  cursor: not-allowed;
-}
-
-.customise-heading {
-  font-weight: 500;
-}
-
 .footer {
   display: flex;
   gap: 5px;
@@ -439,6 +478,11 @@ body {
 
   .joke-advice-body {
     font-size: 18px;
+  }
+
+  .info {
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .controls {

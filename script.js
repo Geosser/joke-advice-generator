@@ -66,12 +66,12 @@ function openAdvicePopup() {
   }
 }
 
-let url = JSON.parse(localStorage.getItem('url')) || 'https://v2.jokeapi.dev/joke/Any?Single';
+let url = JSON.parse(localStorage.getItem('url')) || 'https://v2.jokeapi.dev/joke/Any?type=single&amount=1';
 
 const jokeConfig = JSON.parse(localStorage.getItem('jokeConfig')) || {
   categories: ['Any'],
   blacklistFlags: [],
-  type: 'Single',
+  type: 'single',
   amount: 1
 }
 
@@ -97,7 +97,7 @@ customJokeRadio.addEventListener('change', (event) => {
   saveJokeCustomisationButton.disabled = true;
 
   document.querySelector('.js-custom-category')
-    .addEventListener('change', (event) => {
+    .addEventListener('change', () => {
       saveJokeCustomisationButton.disabled = true;
 
       customCategoriesCheckboxes.forEach(category => {
@@ -128,6 +128,8 @@ const singleTypeRadio = document.querySelector('.js-single-type-radio');
 const twopartTypeRadio = document.querySelector('.js-twopart-type-radio');
 
 const blacklistFlags = document.querySelectorAll('.js-custom-blacklist input[type="checkbox"]');
+
+const amountInput = document.querySelector('.js-joke-amount');
 
 let saveJokeTimeoutId;
 let resetJokeTimeoutId;
@@ -170,10 +172,16 @@ function saveJokeCustomisation() {
     }
   });
 
-  url = `https://v2.jokeapi.dev/joke/${jokeConfig.categories.join(',')}?type=${jokeConfig.type}&blacklistFlags=${jokeConfig.blacklistFlags.join(',')}`;
+  jokeConfig.amount = Number(amountInput.value) || 1;
+
+  url = `https://v2.jokeapi.dev/joke/${jokeConfig.categories.join(',')}?type=${jokeConfig.type}&blacklistFlags=${jokeConfig.blacklistFlags.join(',')}&amount=${jokeConfig.amount}`;
 
   localStorage.setItem('url', JSON.stringify(url));
   localStorage.setItem('jokeConfig', JSON.stringify(jokeConfig));
+
+  applySavedJokeConfigs();
+
+  // jokePopup.classList.add('hide-popup');
 
   console.log(url)
   console.log(jokeConfig);
@@ -185,7 +193,7 @@ function resetJokeCustomisation() {
 
   jokeConfig.categories = ['Any'];
   jokeConfig.blacklistFlags = [];
-  jokeConfig.type = 'Single';
+  jokeConfig.type = 'single';
   jokeConfig.amount = 1;
 
   applySavedJokeConfigs();
@@ -214,7 +222,7 @@ function applySavedJokeConfigs() {
     });
   }
 
-  if (jokeConfig.type === 'Single') {
+  if (jokeConfig.type === 'single') {
     singleTypeRadio.checked = true;
   } else if (jokeConfig.type === 'twopart') {
     twopartTypeRadio.checked = true;
@@ -229,6 +237,8 @@ function applySavedJokeConfigs() {
       flag.checked = false;
     });
   }
+
+  amountInput.value = jokeConfig.amount;
 }
 
 applySavedJokeConfigs();
@@ -265,6 +275,8 @@ const banner = document.querySelector('.js-banner');
 const tellAJokeButton = document.querySelector('.js-tell-a-joke');
 
 tellAJokeButton.addEventListener('click', () => {
+  console.log(url);
+
   if (timeoutId) {
     clearTimeout(timeoutId);
   }
@@ -300,11 +312,14 @@ async function renderJoke() {
 
     contentContainer.innerHTML = html;
 
-    const copyButton = document.querySelector('.js-copy');
-    copyButton.addEventListener('click', async () =>  {
-      banner.classList.add('hide');
-      const text = document.querySelector('.js-joke').innerText;
-      await copyToClipboard(text);
+    const copyButtons = document.querySelectorAll('.js-copy');
+
+    copyButtons.forEach(copyButton => {
+      copyButton.addEventListener('click', async () =>  {
+        const { jokeIndex } = copyButton.dataset
+        const text = document.querySelector(`.js-joke-${jokeIndex}`).innerText;
+        await copyToClipboard(text, jokeIndex);
+      });
     });
 
     timeoutId = setTimeout(() => {
@@ -377,32 +392,67 @@ async function renderAdvice() {
 }
 
 async function tellAJoke() {
-  const joke = await getJoke();
+  const response = await getJoke();
+  console.log(response)
 
-  const jokeHTML = `
-    <div>
-      <button class="copy js-copy" title="Copy Joke">
-        <i class="fa-regular fa-copy copy-hover"></i>
-        <i class="fa-solid fa-copy copy-active"></i>
-      </button>
-    </div>
+  let jokeDetails = [];
 
-    <div class="info">Joke #${joke.id} | Category: ${joke.category}</div>
+  if (jokeConfig.amount === 1) {
+    jokeDetails.push(response);
+  } else if (jokeConfig.amount > 1) {
+    const jokes = response.jokes
+    jokes.forEach(joke => {
+      jokeDetails.push(joke);
+    });
+  }
 
-    <div class="disclaimer">
-      <span>Disclaimer:</span>
-      <span title="not safe for work">nsfw: ${joke.flags.nsfw ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
-      <span>religious: ${joke.flags.religious ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
-      <span>political: ${joke.flags.political ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
-      <span>racist: ${joke.flags.racist ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
-      <span>sexist: ${joke.flags.sexist ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
-      <span>explicit: ${joke.flags.explicit ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
-    </div>
+  console.log(jokeConfig.amount)
+  console.log('joke details: ', jokeDetails);
 
-    <div class="joke-advice-body js-joke">
-      ${joke.joke}
-    </div>
-  `;
+  let jokeHTML = '';
+
+  jokeDetails.forEach((joke, jokeIndex) => {
+    jokeHTML += `
+      <div class="joke-content joke-${jokeIndex}">
+        <div>
+          <button class="copy js-copy js-copy-${jokeIndex}" title="Copy Joke" data-joke-index=${jokeIndex}>
+            <i class="fa-regular fa-copy copy-hover"></i>
+            <i class="fa-solid fa-copy copy-active"></i>
+          </button>
+        </div>
+
+        <div class="info">
+          <div>
+            Category: ${joke.category}
+            |
+            Safe: ${joke.safe ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}
+          </div>
+
+          <div>
+            Joke: #${joke.id}
+            |
+            Type: ${joke.type}
+          </div>
+        </div>
+
+        <div class="disclaimer">
+          <span>Disclaimer:</span>
+          <span title="not safe for work">nsfw: ${joke.flags.nsfw ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+          <span>religious: ${joke.flags.religious ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+          <span>political: ${joke.flags.political ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+          <span>racist: ${joke.flags.racist ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+          <span>sexist: ${joke.flags.sexist ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+          <span>explicit: ${joke.flags.explicit ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+        </div>
+
+        <div class="joke-advice-body js-joke js-joke-${jokeIndex}">
+          ${joke.joke}
+        </div>
+      </div>
+    `;
+  });
+
+  console.log(jokeHTML)
 
   return jokeHTML;
 }
@@ -429,29 +479,26 @@ async function giveAdvice() {
   return adviceHTML;
 }
 
-async function copyToClipboard(text) {
+let copyTimeoutId = {};
+
+async function copyToClipboard(text, jokeIndex) {
   try {
+    if (copyTimeoutId[jokeIndex]) {
+      clearTimeout(copyTimeoutId[jokeIndex]);
+    }
+
     await navigator.clipboard.writeText(text);
 
-    const copyButton = document.querySelector('.js-copy');
-    copyButton.disabled = true;
+    const copyButton = document.querySelector(`.js-copy-${jokeIndex}`);
 
     copyButton.innerHTML = `<i class="fa-solid fa-check copied"></i>`;
 
-    banner.classList.remove('hide');
-    banner.innerHTML = `
-      <div>
-        <i class="fa-solid fa-check copied"></i>
-        copied
-      </div>
-    `;
-
-    setTimeout(() => {
+    copyTimeoutId[jokeIndex] = setTimeout(() => {
       copyButton.innerHTML = `
         <i class="fa-regular fa-copy copy-hover"></i>
         <i class="fa-solid fa-copy copy-active"></i>
       `;
-      copyButton.disabled = false;
+      // copyButton.disabled = false;
 
       banner.classList.add('hide');
     }, 2000);
