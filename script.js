@@ -195,6 +195,7 @@ function resetJokeCustomisation() {
   jokeConfig.blacklistFlags = [];
   jokeConfig.type = 'single';
   jokeConfig.amount = 1;
+  url = 'https://v2.jokeapi.dev/joke/Any?type=single&amount=1';
 
   applySavedJokeConfigs();
 
@@ -312,6 +313,12 @@ async function renderJoke() {
 
     contentContainer.innerHTML = html;
 
+    const jokeNumbers = document.querySelectorAll('.js-joke-number');
+
+    if (jokeNumbers.length === 1) {
+      jokeNumbers[0].classList.add('hide');
+    }
+
     const copyButtons = document.querySelectorAll('.js-copy');
 
     copyButtons.forEach(copyButton => {
@@ -414,6 +421,10 @@ async function tellAJoke() {
   jokeDetails.forEach((joke, jokeIndex) => {
     jokeHTML += `
       <div class="joke-content joke-${jokeIndex}">
+        <div class="joke-number js-joke-number">
+          ${jokeIndex + 1}
+        </div>
+      
         <div>
           <button class="copy js-copy js-copy-${jokeIndex}" title="Copy Joke" data-joke-index=${jokeIndex}>
             <i class="fa-regular fa-copy copy-hover"></i>
@@ -451,8 +462,6 @@ async function tellAJoke() {
       </div>
     `;
   });
-
-  console.log(jokeHTML)
 
   return jokeHTML;
 }
