@@ -72,7 +72,7 @@ header {
 .menu-items {
   display: none;
   position: absolute;
-  top: 100%;
+  top: 180%;
   right: -10px;
   background-color: #ffffff;
   min-width: 180px;
@@ -129,12 +129,20 @@ header {
 .close-popup {
   border: none;
   background-color: transparent;
-  display: absolute;
-  top: 10px;
+  position: sticky;
+  top: 4px;
   right: 10px;
   z-index: 110;
   align-self: end;
   cursor: pointer;
+  border: #000000 1px solid;
+  border-radius: 50%;
+  padding: 2px;
+}
+
+.close-popup:active {
+  background: #000000;
+  color: #ffffffff;
 }
 
 .joke-customise-container,
