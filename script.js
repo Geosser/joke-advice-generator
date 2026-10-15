@@ -131,20 +131,19 @@ const blacklistFlags = document.querySelectorAll('.js-custom-blacklist input[typ
 
 const amountInput = document.querySelector('.js-joke-amount');
 
+singleTypeRadio.addEventListener('change', () => {
+  amountInput.disabled = false;
+});
+
+twopartTypeRadio.addEventListener('change', () => {
+  amountInput.value = 1;
+  amountInput.disabled = true;
+});
+
 let saveJokeTimeoutId;
 let resetJokeTimeoutId;
 
 function saveJokeCustomisation() {
-  if (saveJokeTimeoutId) {
-    clearTimeout(saveJokeTimeoutId);
-  }
-  
-  saveJokeCustomisationButton.innerHTML = 'Customisation Saved';
-
-  saveJokeTimeoutId = setTimeout(() => {
-    saveJokeCustomisationButton.innerHTML = 'Save Customisation';
-  }, 2000);
-
   if (anyJokeRadio.checked) {
     jokeConfig.categories = [];
     jokeConfig.categories.push(anyJokeRadio.value);
@@ -172,6 +171,11 @@ function saveJokeCustomisation() {
     }
   });
 
+  if (Number(amountInput.value) > 10 || Number(amountInput.value) < 1) {
+    alert("Joke amount must be between 1 and 10 (inclusive)");
+    return;
+  }
+
   jokeConfig.amount = Number(amountInput.value) || 1;
 
   url = `https://v2.jokeapi.dev/joke/${jokeConfig.categories.join(',')}?type=${jokeConfig.type}&blacklistFlags=${jokeConfig.blacklistFlags.join(',')}&amount=${jokeConfig.amount}`;
@@ -180,6 +184,16 @@ function saveJokeCustomisation() {
   localStorage.setItem('jokeConfig', JSON.stringify(jokeConfig));
 
   applySavedJokeConfigs();
+
+  if (saveJokeTimeoutId) {
+    clearTimeout(saveJokeTimeoutId);
+  }
+  
+  saveJokeCustomisationButton.innerHTML = 'Customisation Saved';
+
+  saveJokeTimeoutId = setTimeout(() => {
+    saveJokeCustomisationButton.innerHTML = 'Save Customisation';
+  }, 2000);
 
   // jokePopup.classList.add('hide-popup');
 
@@ -225,8 +239,10 @@ function applySavedJokeConfigs() {
 
   if (jokeConfig.type === 'single') {
     singleTypeRadio.checked = true;
+    amountInput.disabled = false;
   } else if (jokeConfig.type === 'twopart') {
     twopartTypeRadio.checked = true;
+    amountInput.disabled = true;
   }
 
   if (jokeConfig.blacklistFlags.length > 0) {
@@ -309,9 +325,39 @@ giveAdviceButton.addEventListener('click', () => {
 
 async function renderJoke() {
   try {
-    const html = await tellAJoke();
+    let html = '';
+
+    if (jokeConfig.type === 'single') {
+      html = await generateSingleJokeHTML();
+    } else if (jokeConfig.type === 'twopart') {
+      html = await generateTwopartJokeHTML();
+    }
 
     contentContainer.innerHTML = html;
+
+    const punchlineLink = document.querySelector('.js-punchline-link');
+    const jokeDeliveryContainer = document.querySelector('.js-twopart-joke-delivery');
+
+    if (punchlineLink && jokeDeliveryContainer) {
+      const fallbackTimeoutId = setTimeout(() => {
+        showPunchline();
+      }, 100000);
+
+      punchlineLink.addEventListener('click', () => {
+        clearTimeout(fallbackTimeoutId);
+
+        punchlineLink.classList.add('hide');
+
+        setTimeout(() => {
+          jokeDeliveryContainer.classList.remove('hide');
+        }, 1000);
+      });
+
+      function showPunchline() {
+        punchlineLink.classList.add('hide');
+        jokeDeliveryContainer.classList.remove('hide');
+      }
+    }
 
     const jokeNumbers = document.querySelectorAll('.js-joke-number');
 
@@ -398,9 +444,8 @@ async function renderAdvice() {
   }
 }
 
-async function tellAJoke() {
+async function generateSingleJokeHTML() {
   const response = await getJoke();
-  console.log(response)
 
   let jokeDetails = [];
 
@@ -462,6 +507,63 @@ async function tellAJoke() {
       </div>
     `;
   });
+
+  return jokeHTML;
+}
+
+async function generateTwopartJokeHTML() {
+  const jokeDetails = await getJoke();
+
+  const jokeHTML = `
+    <div class="joke-content">
+      <div>
+        <button class="copy js-copy" title="Copy Joke">
+          <i class="fa-regular fa-copy copy-hover"></i>
+          <i class="fa-solid fa-copy copy-active"></i>
+        </button>
+      </div>
+
+      <div class="info">
+        <div>
+          Category: ${jokeDetails.category}
+          |
+          Safe: ${jokeDetails.safe ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}
+        </div>
+
+        <div>
+          Joke: #${jokeDetails.id}
+          |
+          Type: ${jokeDetails.type}
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <span>Disclaimer:</span>
+        <span title="not safe for work">nsfw: ${jokeDetails.flags.nsfw ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+        <span>religious: ${jokeDetails.flags.religious ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+        <span>political: ${jokeDetails.flags.political ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+        <span>racist: ${jokeDetails.flags.racist ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+        <span>sexist: ${jokeDetails.flags.sexist ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+        <span>explicit: ${jokeDetails.flags.explicit ? '<i class="fa-solid fa-check safe"></i>' : '<i class="fa-solid fa-xmark not-safe"></i>'}</span>
+      </div>
+
+      <div class="joke-advice-body">
+        <div class="js-twopart-joke-setup">
+          ${jokeDetails.setup}
+        </div>
+
+        <div class="joke-delivery-container">
+          <div>
+            <span class="punchline-link js-punchline-link">Show punchline</span>
+          </div>
+
+          <div class="twopart-joke-delivery js-twopart-joke-delivery hide">
+            ${jokeDetails.delivery}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 
   return jokeHTML;
 }

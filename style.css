@@ -317,8 +317,8 @@ header {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
   margin-bottom: 10px;
   color: #525252;
   font-size: 13px;
@@ -331,6 +331,28 @@ header {
   background-color: #c4c4c4;
   padding: 5px;
   border-radius: 5px;
+}
+
+.joke-delivery-container {
+  padding: 20px;
+}
+
+.punchline-link {
+  color: #008BFF;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.punchline-link:hover {
+  text-decoration: underline;
+}
+
+.punchline-link:active {
+  text-decoration: none;
+}
+
+.twopart-joke-delivery {
+  color: #525252;
 }
 
 .safe {
