@@ -335,13 +335,18 @@ async function renderJoke() {
 
     contentContainer.innerHTML = html;
 
+    const copyButtons = document.querySelectorAll('.js-copy');
+
     const punchlineLink = document.querySelector('.js-punchline-link');
     const jokeDeliveryContainer = document.querySelector('.js-twopart-joke-delivery');
 
     if (punchlineLink && jokeDeliveryContainer) {
+      copyButtons[0].disabled = true;
+      
       const fallbackTimeoutId = setTimeout(() => {
         showPunchline();
-      }, 100000);
+        copyButtons[0].disabled = false;
+      }, 60000);
 
       punchlineLink.addEventListener('click', () => {
         clearTimeout(fallbackTimeoutId);
@@ -350,6 +355,7 @@ async function renderJoke() {
 
         setTimeout(() => {
           jokeDeliveryContainer.classList.remove('hide');
+          copyButtons[0].disabled = false;
         }, 1000);
       });
 
@@ -365,12 +371,18 @@ async function renderJoke() {
       jokeNumbers[0].classList.add('hide');
     }
 
-    const copyButtons = document.querySelectorAll('.js-copy');
-
     copyButtons.forEach(copyButton => {
       copyButton.addEventListener('click', async () =>  {
         const { jokeIndex } = copyButton.dataset
-        const text = document.querySelector(`.js-joke-${jokeIndex}`).innerText;
+        console.log(jokeIndex)
+
+        const jokeElements = document.querySelectorAll(`.js-joke-${jokeIndex}`);
+        console.log(jokeElements)
+
+        const textArray = Array.from(jokeElements, element => element.innerText);
+        const text = textArray.join(', ');
+        console.log(text)
+
         await copyToClipboard(text, jokeIndex);
       });
     });
@@ -515,9 +527,9 @@ async function generateTwopartJokeHTML() {
   const jokeDetails = await getJoke();
 
   const jokeHTML = `
-    <div class="joke-content">
+    <div class="joke-content joke-${jokeDetails.id}">
       <div>
-        <button class="copy js-copy" title="Copy Joke">
+        <button class="copy js-copy js-copy-${jokeDetails.id}" title="Copy Joke" data-joke-index=${jokeDetails.id}>
           <i class="fa-regular fa-copy copy-hover"></i>
           <i class="fa-solid fa-copy copy-active"></i>
         </button>
@@ -548,7 +560,7 @@ async function generateTwopartJokeHTML() {
       </div>
 
       <div class="joke-advice-body">
-        <div class="js-twopart-joke-setup">
+        <div class="js-twopart-joke-setup js-joke-${jokeDetails.id}">
           ${jokeDetails.setup}
         </div>
 
@@ -557,7 +569,7 @@ async function generateTwopartJokeHTML() {
             <span class="punchline-link js-punchline-link">Show punchline</span>
           </div>
 
-          <div class="twopart-joke-delivery js-twopart-joke-delivery hide">
+          <div class="twopart-joke-delivery js-twopart-joke-delivery js-joke-${jokeDetails.id} hide">
             ${jokeDetails.delivery}
           </div>
         </div>
@@ -609,7 +621,6 @@ async function copyToClipboard(text, jokeIndex) {
         <i class="fa-regular fa-copy copy-hover"></i>
         <i class="fa-solid fa-copy copy-active"></i>
       `;
-      // copyButton.disabled = false;
 
       banner.classList.add('hide');
     }, 2000);

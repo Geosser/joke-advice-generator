@@ -301,6 +301,10 @@ header {
   display: inline-block;
 }
 
+.copy:disabled {
+  cursor: not-allowed;
+}
+
 .copied {
   position: absolute;
   font-size: 8px;
