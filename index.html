@@ -96,7 +96,7 @@
                   <div class="custom-blacklist js-custom-blacklist">
                     <span>
                       <input type="checkbox" id="nsfw" value="nsfw">
-                      <label for="nsfw">nsfw</label>
+                      <label for="nsfw" title="not safe for work">nsfw</label>
                     </span>
 
                     <span>
@@ -149,6 +149,39 @@
                     <span>
                       <label for="amount">Amount:</label>
                       <input type="number" id="amount" class="js-joke-amount" value="1" min="1" max="10">
+                    </span>
+                  </div>
+                </div>
+
+                <div class="id-search">
+                  <div class="customise-heading">Search joke by joke id</div>
+
+                  <div class="custom-id-search">
+                    <span>
+                      <input type="checkbox" id="allow-joke-id-search" class="js-allow joke-id-search">
+                      <label for="allow-joke-id-search">Allow</label>
+                    </span>
+
+                    <span>
+                      <label for="joke-id-number">Joke id: </label>
+                      <input type="number" id="joke-id-number" class="js-joke-id-number" value="0" min="0" max="1000" disabled>
+                    </span>
+                  </div>
+                </div>
+
+
+                <div class="keyword-search">
+                  <div class="customise-heading">Search joke by keyword</div>
+
+                  <div class="custom-keyword-search">
+                    <span>
+                      <input type="checkbox" id="allow-joke-keyword-search" class="js-allow joke-keyword-search">
+                      <label for="allow-joke-keyword-search">Allow</label>
+                    </span>
+
+                    <span>
+                      <label for="joke-keyword">Keyword: </label>
+                      <input type="text" id="joke-keyword" class="js-joke-keyword" placeholder="Enter a word in a joke" disabled>
                     </span>
                   </div>
                 </div>

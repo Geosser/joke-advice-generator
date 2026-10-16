@@ -156,6 +156,8 @@ header {
 .blacklist,
 .type,
 .amount,
+.id-search,
+.keyword-search,
 .custom-advice {
   display: flex;
   flex-direction: column;
@@ -166,6 +168,8 @@ header {
 .custom-blacklist,
 .custom-type,
 .custom-amount,
+.custom-id-search,
+.custom-keyword-search,
 .advice-custom-category {
   display: flex;
   flex-direction: column;
@@ -192,6 +196,8 @@ header {
 .categories input:hover,
 .custom-blacklist input:hover,
 .custom-type input:hover,
+.custom-id-search input[type="checkbox"]:hover,
+.custom-keyword-search input[type="checkbox"],
 .advice-popup-card input[type="radio"]:hover {
   cursor: pointer;
 }
@@ -199,6 +205,8 @@ header {
 .categories label:hover,
 .custom-blacklist label:hover,
 .custom-type label:hover,
+.custom-id-search #allow-joke-id-search + label,
+.custom-keyword-search #allow-joke-keyword-search + label,
 .advice-popup-card label:hover {
   cursor: pointer;
 }
@@ -207,6 +215,8 @@ header {
 .custom-blacklist input:disabled + label,
 .custom-type input:disabled + label,
 .amount:has(input:disabled) label,
+.custom-id-search span:has(input:disabled) label,
+.custom-keyword-search span:has(input:disabled) label,
 .advice-popup-card input:disabled + label,
 .advice-custom-category:has(input:disabled) label {
   opacity: 0.5;
@@ -217,6 +227,8 @@ header {
 .custom-blacklist input:disabled,
 .custom-type input:disabled,
 .amount input:disabled,
+.custom-id-search input:disabled,
+.custom-keyword-search input:disabled,
 .advice-popup-card input:disabled {
   cursor: not-allowed;
 }
