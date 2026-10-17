@@ -250,12 +250,26 @@ header {
 
 .banner {
   background-color: #ffffff;
-  padding: 5px;
+  padding: 5px 20px 5px 5px;
   border-radius: 6px;
   align-self: end;
   margin-right: 20px;
   box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
   font-size: 10px;
+  position: absolute;
+  top: 0;
+  color: #ff0000;
+}
+
+.close-banner-button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 10px;
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%)
 }
 
 .joke-advice-container {

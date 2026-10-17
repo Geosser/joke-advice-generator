@@ -288,6 +288,14 @@ let timeoutId;
 
 const contentContainer = document.querySelector('.js-joke-advice-container');
 const banner = document.querySelector('.js-banner');
+const bannerContentContainer = document.querySelector('.js-banner-content');
+const closeBannerButton = document.querySelector('.js-close-banner-button');
+
+if (closeBannerButton) {
+  closeBannerButton.addEventListener('click', () => {
+    banner.classList.add('hide');
+  });
+}
 
 const tellAJokeButton = document.querySelector('.js-tell-a-joke');
 
@@ -397,9 +405,8 @@ async function renderJoke() {
 
     banner.classList.remove('hide');
 
-    banner.innerHTML = `
+    bannerContentContainer.innerHTML = `
       <div>
-        <i class="fa-solid fa-xmark not-safe"></i>
         ${error}. Please try again later.
       </div>
     `;
@@ -438,9 +445,8 @@ async function renderAdvice() {
     
     banner.classList.remove('hide');
 
-    banner.innerHTML = `
+    bannerContentContainer.innerHTML = `
       <div>
-        <i class="fa-solid fa-xmark not-safe"></i>
         ${error}. Please try again later.
       </div>
     `;
@@ -628,9 +634,8 @@ async function copyToClipboard(text, jokeIndex) {
   } catch (error) {
     banner.classList.remove('hide');
 
-    banner.innerHTML = `
+    bannerContentContainer.innerHTML = `
       <div>
-        <i class="fa-solid fa-xmark not-safe"></i>
         Failed to copy. Please copy manually.
       </div>
     `;
