@@ -72,7 +72,15 @@ const jokeConfig = JSON.parse(localStorage.getItem('jokeConfig')) || {
   categories: ['Any'],
   blacklistFlags: [],
   type: 'single',
-  amount: 1
+  amount: 1,
+  searchById: {
+    isAllowed: false,
+    searchId: ''
+  },
+  searchByKeyword: {
+    isAllowed: false,
+    searchKeyword: ''
+  }
 }
 
 const saveJokeCustomisationButton = document.querySelector('.js-save-joke-customisation');
@@ -140,6 +148,43 @@ twopartTypeRadio.addEventListener('change', () => {
   amountInput.disabled = true;
 });
 
+const allowJokeIdSearchCheckbox = document.querySelector('.js-allow-joke-id-search');
+const jokeIdInput = document.querySelector('.js-joke-id-number');
+
+if (allowJokeIdSearchCheckbox) {
+  allowJokeIdSearchCheckbox.addEventListener('change', () => {
+    toggleAllow(allowJokeIdSearchCheckbox, jokeIdInput);
+    if (allowJokeIdSearchCheckbox.checked) {
+      jokeConfig.searchById.isAllowed = true;
+    } else {
+      jokeConfig.searchById.isAllowed = false;
+    }
+  });
+}
+
+const allowJokeKeywordSearchCheckbox = document.querySelector('.js-allow-joke-keyword-search');
+const jokeKeywordInput = document.querySelector('.js-joke-keyword');
+
+if (allowJokeKeywordSearchCheckbox) {
+  allowJokeKeywordSearchCheckbox.addEventListener('change', () => {
+    toggleAllow(allowJokeKeywordSearchCheckbox, jokeKeywordInput);
+    if (allowJokeKeywordSearchCheckbox.checked) {
+      jokeConfig.searchByKeyword.isAllowed = true;
+    } else {
+      jokeConfig.searchByKeyword.isAllowed = false;
+    }
+  });
+}
+
+function toggleAllow(checkbox, inputElement) {
+  inputElement.disabled = false;
+    
+  if (!checkbox.checked) {
+    inputElement.disabled = true;
+    inputElement.value = '';
+  }
+}
+
 let saveJokeTimeoutId;
 let resetJokeTimeoutId;
 
@@ -178,7 +223,11 @@ function saveJokeCustomisation() {
 
   jokeConfig.amount = Number(amountInput.value) || 1;
 
-  url = `https://v2.jokeapi.dev/joke/${jokeConfig.categories.join(',')}?type=${jokeConfig.type}&blacklistFlags=${jokeConfig.blacklistFlags.join(',')}&amount=${jokeConfig.amount}`;
+  jokeConfig.searchById.searchId = jokeIdInput.value !== '' ? Number(jokeIdInput.value) : '';
+
+  jokeConfig.searchByKeyword.searchKeyword = jokeKeywordInput.value;
+
+  url = `https://v2.jokeapi.dev/joke/${jokeConfig.categories.join(',')}?type=${jokeConfig.type}&blacklistFlags=${jokeConfig.blacklistFlags.join(',')}&amount=${jokeConfig.amount}&contains=${jokeConfig.searchByKeyword.searchKeyword}&idRange=${jokeConfig.searchById.searchId}`;
 
   localStorage.setItem('url', JSON.stringify(url));
   localStorage.setItem('jokeConfig', JSON.stringify(jokeConfig));
@@ -209,6 +258,10 @@ function resetJokeCustomisation() {
   jokeConfig.blacklistFlags = [];
   jokeConfig.type = 'single';
   jokeConfig.amount = 1;
+  jokeConfig.searchById.isAllowed = false;
+  jokeConfig.searchById.searchId = '';
+  jokeConfig.searchByKeyword.isAllowed = false;
+  jokeConfig.searchByKeyword.searchKeyword = '';
   url = 'https://v2.jokeapi.dev/joke/Any?type=single&amount=1';
 
   applySavedJokeConfigs();
@@ -256,6 +309,26 @@ function applySavedJokeConfigs() {
   }
 
   amountInput.value = jokeConfig.amount;
+
+  if (jokeConfig.searchById.isAllowed) {
+    allowJokeIdSearchCheckbox.checked = true;
+    jokeIdInput.disabled = false;
+    jokeIdInput.value = jokeConfig.searchById.searchId;
+  } else {
+    allowJokeIdSearchCheckbox.checked = false;
+    jokeIdInput.disabled = true;
+    jokeIdInput.value = '';
+  }
+
+  if (jokeConfig.searchByKeyword.isAllowed) {
+    allowJokeKeywordSearchCheckbox.checked = true;
+    jokeKeywordInput.disabled = false;
+    jokeKeywordInput.value = jokeConfig.searchByKeyword.searchKeyword;
+  } else {
+    allowJokeKeywordSearchCheckbox.checked = false;
+    jokeKeywordInput.disabled = true;
+    jokeKeywordInput.value = '';
+  }
 }
 
 applySavedJokeConfigs();
