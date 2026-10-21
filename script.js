@@ -335,13 +335,10 @@ applySavedJokeConfigs();
 
 async function getJoke() {
   const response = await fetch(url);
-  
-  if (!response.ok) {
-    throw new Error(`Server Error. Response Status: ${response.status}`);
-  }
 
   const responseData = await response.json();
   console.log(responseData);
+
   return responseData;
 }
 
@@ -485,7 +482,7 @@ async function renderJoke() {
     `;
 
     contentContainer.innerHTML = `
-      <div><i class="fa-solid fa-face-frown"></i></div>
+      <div><i class="fa-solid fa-face-frown" style="color:#3b0000; font-size:50px"></i></div>
     `;
 
     timeoutId = setTimeout(() => {
@@ -537,6 +534,11 @@ async function renderAdvice() {
 
 async function generateSingleJokeHTML() {
   const response = await getJoke();
+
+  if (response.error) {
+    errorHTML = generateErrorHTML(response);
+    return errorHTML;
+  }
 
   let jokeDetails = [];
 
@@ -605,6 +607,11 @@ async function generateSingleJokeHTML() {
 async function generateTwopartJokeHTML() {
   const jokeDetails = await getJoke();
 
+  if (jokeDetails.error) {
+    errorHTML = generateErrorHTML(jokeDetails);
+    return errorHTML;
+  }
+
   const jokeHTML = `
     <div class="joke-content joke-${jokeDetails.id}">
       <div>
@@ -657,6 +664,24 @@ async function generateTwopartJokeHTML() {
   `;
 
   return jokeHTML;
+}
+
+function generateErrorHTML(errorDetails) {
+  const errorHTML = `
+    <div class="error-container">
+      <i class="fa-solid fa-face-frown" style="color:#3b0000; font-size:50px"></i>
+
+      <div class="error-message">
+        ${errorDetails.message}!
+      </div>
+
+      <div class="error-additional-info">
+        ${errorDetails.additionalInfo}
+      </div>
+    </div>
+  `;
+
+  return errorHTML;
 }
 
 async function giveAdvice() {
