@@ -1,70 +1,5 @@
-const menuButton = document.querySelector('.js-menu-button');
-const menuItems = document.querySelector('.js-menu-items');
-
-const openJokePopupLink = document.querySelector('.js-open-joke-popup');
-const openAdvicePopupLink = document.querySelector('.js-open-advice-popup');
-
-const jokePopup = document.querySelector('.js-joke-popup-card');
-const advicePopup = document.querySelector('.js-advice-popup-card');
-
-const closeJokePopupButton = document.querySelector('.js-close-joke-popup');
-const closeAdvicePopupButton = document.querySelector('.js-close-advice-popup');
-
-menuButton.addEventListener('click', () => {
-  if (!menuItems.classList.contains('open')) {
-    menuItems.classList.add('open');
-    menuButton.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-  } else {
-    menuItems.classList.remove('open');
-    menuButton.innerHTML = '<i class="fa-solid fa-bars"></i>';
-  }
-});
-
-openJokePopupLink.addEventListener('click', () => {
-  openJokePopup();
-});
-
-closeJokePopupButton.addEventListener('click', () => {
-  openJokePopup();
-});
-
-openAdvicePopupLink.addEventListener('click', () => {
-  openAdvicePopup();
-});
-
-closeAdvicePopupButton.addEventListener('click', () => {
-  openAdvicePopup()
-});
-
-function openJokePopup() {
-  menuItems.classList.remove('open');
-  menuButton.innerHTML = '<i class="fa-solid fa-bars"></i>';
-
-  if (!advicePopup.classList.contains('hide-popup')) {
-    advicePopup.classList.add('hide-popup');
-  }
-
-  if (jokePopup.classList.contains('hide-popup')) {
-    jokePopup.classList.remove('hide-popup');
-  } else {
-    jokePopup.classList.add('hide-popup');
-  }
-}
-
-function openAdvicePopup() {
-  menuItems.classList.remove('open');
-  menuButton.innerHTML = '<i class="fa-solid fa-bars"></i>';
-
-  if (!jokePopup.classList.contains('hide-popup')) {
-    jokePopup.classList.add('hide-popup')
-  }
-  
-  if (advicePopup.classList.contains('hide-popup')) {
-    advicePopup.classList.remove('hide-popup');
-  } else {
-    advicePopup.classList.add('hide-popup');
-  }
-}
+import { copyToClipboard } from "./utils/copyToClipboard.js";
+import { jokePopup } from "./utils/menu.js";
 
 let url = JSON.parse(localStorage.getItem('url')) || 'https://v2.jokeapi.dev/joke/Any?type=single&amount=1';
 
@@ -84,13 +19,11 @@ const jokeConfig = JSON.parse(localStorage.getItem('jokeConfig')) || {
 }
 
 const saveJokeCustomisationButton = document.querySelector('.js-save-joke-customisation');
-
-const resetJokeCustomisationButton = document.querySelector('.js-reset-joke-customisation');
-
 saveJokeCustomisationButton.addEventListener('click', () => {
   saveJokeCustomisation();
 });
 
+const resetJokeCustomisationButton = document.querySelector('.js-reset-joke-customisation');
 resetJokeCustomisationButton.addEventListener('click', () => {
   resetJokeCustomisation();
 });
@@ -124,11 +57,9 @@ anyJokeRadio.addEventListener('change', () => {
 function toggleJokeCustomCategories(enable) {
   customCategoriesCheckboxes.forEach(category => {
     category.disabled = !enable;
-    customCategoriesCheckboxes.forEach(category => {
-      if (category.checked) {
-        category.checked = false;
-      }
-    });
+    if(!enable) {
+      category.checked = false;
+    }
   });
 }
 
@@ -244,10 +175,10 @@ function saveJokeCustomisation() {
     saveJokeCustomisationButton.innerHTML = 'Save Customisation';
   }, 2000);
 
-  // jokePopup.classList.add('hide-popup');
+  jokePopup.classList.add('hide-popup');
 
-  console.log(url)
-  console.log(jokeConfig);
+  // console.log(url)
+  // console.log(jokeConfig);
 }
 
 function resetJokeCustomisation() {
@@ -337,20 +268,8 @@ async function getJoke() {
   const response = await fetch(url);
 
   const responseData = await response.json();
-  console.log(responseData);
+  // console.log(responseData);
 
-  return responseData;
-}
-
-async function getAdvice() {
-  const response = await fetch('https://api.adviceslip.com/advice');
-  
-  if (!response.ok) {
-    throw new Error(`Server Error. Response Status: ${response.status}`);
-  }
-
-  const responseData = await response.json();
-  console.log(responseData);
   return responseData;
 }
 
@@ -368,9 +287,10 @@ if (closeBannerButton) {
 }
 
 const tellAJokeButton = document.querySelector('.js-tell-a-joke');
+const giveAdviceButton = document.querySelector('.js-give-advice');
 
 tellAJokeButton.addEventListener('click', () => {
-  console.log(url);
+  // console.log(url);
 
   if (timeoutId) {
     clearTimeout(timeoutId);
@@ -385,23 +305,7 @@ tellAJokeButton.addEventListener('click', () => {
   renderJoke();
 });
 
-const giveAdviceButton = document.querySelector('.js-give-advice');
-
-giveAdviceButton.addEventListener('click', () => {
-  if (timeoutId) {
-    clearTimeout(timeoutId);
-  }
-
-  banner.classList.add('hide');
-
-  giveAdviceButton.disabled = true;
-  tellAJokeButton.disabled = true;
-
-  contentContainer.innerHTML = 'Loading advice...';
-  renderAdvice();
-});
-
-async function renderJoke() {
+export async function renderJoke() {
   try {
     let html = '';
 
@@ -452,14 +356,14 @@ async function renderJoke() {
     copyButtons.forEach(copyButton => {
       copyButton.addEventListener('click', async () =>  {
         const { jokeIndex } = copyButton.dataset
-        console.log(jokeIndex)
+        // console.log(jokeIndex)
 
         const jokeElements = document.querySelectorAll(`.js-joke-${jokeIndex}`);
-        console.log(jokeElements)
+        // console.log(jokeElements)
 
         const textArray = Array.from(jokeElements, element => element.innerText);
         const text = textArray.join(', ');
-        console.log(text)
+        // console.log(text)
 
         await copyToClipboard(text, jokeIndex);
       });
@@ -492,51 +396,11 @@ async function renderJoke() {
   }
 }
 
-async function renderAdvice() {
-  try {
-    const html = await giveAdvice();
-
-    contentContainer.innerHTML = html;
-
-    const copyButton = document.querySelector('.js-copy');
-    copyButton.addEventListener('click', async () =>  {
-      banner.classList.add('hide');
-      const text = document.querySelector('.js-advice').innerText;
-      await copyToClipboard(text);
-    });
-
-    timeoutId = setTimeout(() => {
-      giveAdviceButton.disabled = false;
-      tellAJokeButton.disabled = false;
-    }, 2000);
-
-  } catch (error) {
-    console.error('Unexpected error occured', error);
-    
-    banner.classList.remove('hide');
-
-    bannerContentContainer.innerHTML = `
-      <div>
-        ${error}. Please try again later.
-      </div>
-    `;
-
-    contentContainer.innerHTML = `
-      <div><i class="fa-solid fa-face-frown"></i></div>
-    `;
-
-    timeoutId = setTimeout(() => {
-      giveAdviceButton.disabled = false;
-      tellAJokeButton.disabled = false;
-    }, 2000);
-  }
-}
-
 async function generateSingleJokeHTML() {
   const response = await getJoke();
 
   if (response.error) {
-    errorHTML = generateErrorHTML(response);
+    const errorHTML = generateErrorHTML(response);
     return errorHTML;
   }
 
@@ -551,8 +415,8 @@ async function generateSingleJokeHTML() {
     });
   }
 
-  console.log(jokeConfig.amount)
-  console.log('joke details: ', jokeDetails);
+  // console.log(jokeConfig.amount)
+  // console.log('joke details: ', jokeDetails);
 
   let jokeHTML = '';
 
@@ -608,7 +472,7 @@ async function generateTwopartJokeHTML() {
   const jokeDetails = await getJoke();
 
   if (jokeDetails.error) {
-    errorHTML = generateErrorHTML(jokeDetails);
+    const errorHTML = generateErrorHTML(jokeDetails);
     return errorHTML;
   }
 
@@ -682,60 +546,4 @@ function generateErrorHTML(errorDetails) {
   `;
 
   return errorHTML;
-}
-
-async function giveAdvice() {
-  const adviceSlip = await getAdvice();
-  const advice = adviceSlip.slip;
-
-  const adviceHTML = `
-    <div>
-      <button class="copy js-copy" title="Copy Advice">
-        <i class="fa-regular fa-copy copy-hover"></i>
-        <i class="fa-solid fa-copy copy-active"></i>
-      </button>
-    </div>
-
-    <div class="info">Advice #${advice.id}</div>
-
-    <div class="joke-advice-body js-advice">
-      ${advice.advice}
-    </div>
-  `;
-
-  return adviceHTML;
-}
-
-let copyTimeoutId = {};
-
-async function copyToClipboard(text, jokeIndex) {
-  try {
-    if (copyTimeoutId[jokeIndex]) {
-      clearTimeout(copyTimeoutId[jokeIndex]);
-    }
-
-    await navigator.clipboard.writeText(text);
-
-    const copyButton = document.querySelector(`.js-copy-${jokeIndex}`);
-
-    copyButton.innerHTML = `<i class="fa-solid fa-check copied"></i>`;
-
-    copyTimeoutId[jokeIndex] = setTimeout(() => {
-      copyButton.innerHTML = `
-        <i class="fa-regular fa-copy copy-hover"></i>
-        <i class="fa-solid fa-copy copy-active"></i>
-      `;
-
-      banner.classList.add('hide');
-    }, 2000);
-
-  } catch (error) {
-    banner.classList.remove('hide');
-
-    bannerContentContainer.innerHTML = `
-      <div>
-        Failed to copy. Please copy manually.
-      </div>
-    `;
-  }
 }
