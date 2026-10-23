@@ -107,13 +107,37 @@ if (allowJokeKeywordSearchCheckbox) {
   });
 }
 
-function toggleAllow(checkbox, inputElement) {
-  inputElement.disabled = false;
-    
-  if (!checkbox.checked) {
+function toggleAllow(checkbox, inputElement) {    
+  if (checkbox.checked) {
+    inputElement.disabled = false;
+  } else if(!checkbox.checked) {
     inputElement.disabled = true;
     inputElement.value = '';
   }
+
+  checkSearchValidity();
+}
+
+function checkSearchValidity() {
+  const jokeIdInputInvalid = !jokeIdInput.disabled && !jokeIdInput.value;
+  const jokeKeywordInputInvalid = !jokeKeywordInput.disabled && !jokeKeywordInput.value.trim();
+
+  if (jokeIdInputInvalid || jokeKeywordInputInvalid) {
+    saveJokeCustomisationButton.disabled = true;
+  } else {
+    saveJokeCustomisationButton.disabled = false;
+  }
+}
+
+validateSearch(jokeIdInput);
+validateSearch(jokeKeywordInput);
+
+checkSearchValidity();
+
+function validateSearch(inputElement) {
+  inputElement.addEventListener('input', () => {
+    checkSearchValidity();
+  });
 }
 
 let saveJokeTimeoutId;
