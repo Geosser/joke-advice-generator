@@ -1,5 +1,5 @@
 import { copyToClipboard } from "./utils/copyToClipboard.js";
-import { jokePopup } from "./utils/menu.js";
+import { jokePopup, popupBackdrop } from "./utils/menu.js";
 
 let url = JSON.parse(localStorage.getItem('url')) || 'https://v2.jokeapi.dev/joke/Any?type=single&amount=1';
 
@@ -200,6 +200,7 @@ function saveJokeCustomisation() {
   }, 2000);
 
   jokePopup.classList.add('hide-popup');
+  popupBackdrop.classList.add('hide-popup');
 
   // console.log(url)
   // console.log(jokeConfig);

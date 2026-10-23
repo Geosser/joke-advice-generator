@@ -6,6 +6,7 @@ const openAdvicePopupLink = document.querySelector('.js-open-advice-popup');
 
 export const jokePopup = document.querySelector('.js-joke-popup-card');
 export const advicePopup = document.querySelector('.js-advice-popup-card');
+export const popupBackdrop = document.querySelector('.js-popup-backdrop');
 
 const closeJokePopupButton = document.querySelector('.js-close-joke-popup');
 const closeAdvicePopupButton = document.querySelector('.js-close-advice-popup');
@@ -44,6 +45,13 @@ function openJokePopup() {
     advicePopup.classList.add('hide-popup');
   }
 
+  const isOpening = jokePopup.classList.contains('hide-popup');
+  if (isOpening) {
+    popupBackdrop.classList.remove('hide-popup');
+  } else {
+    popupBackdrop.classList.add('hide-popup');
+  }
+
   if (jokePopup.classList.contains('hide-popup')) {
     jokePopup.classList.remove('hide-popup');
   } else {
@@ -58,6 +66,13 @@ function openAdvicePopup() {
   if (!jokePopup.classList.contains('hide-popup')) {
     jokePopup.classList.add('hide-popup')
   }
+
+  const isOpening = advicePopup.classList.contains('hide-popup');
+  if (isOpening) {
+    popupBackdrop.classList.remove('hide-popup');
+  } else {
+    popupBackdrop.classList.add('hide-popup');
+  }
   
   if (advicePopup.classList.contains('hide-popup')) {
     advicePopup.classList.remove('hide-popup');
@@ -65,3 +80,9 @@ function openAdvicePopup() {
     advicePopup.classList.add('hide-popup');
   }
 }
+
+popupBackdrop.addEventListener('click', () => {
+  jokePopup.classList.add('hide-popup');
+  advicePopup.classList.add('hide-popup');
+  popupBackdrop.classList.add('hide-popup');
+});
