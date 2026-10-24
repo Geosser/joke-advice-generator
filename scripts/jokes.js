@@ -1,7 +1,7 @@
 import { copyToClipboard } from "./utils/copyToClipboard.js";
 import { jokePopup, popupBackdrop } from "./utils/menu.js";
 
-let url = JSON.parse(localStorage.getItem('url')) || 'https://v2.jokeapi.dev/joke/Any?type=single&amount=1';
+let jokeURL = JSON.parse(localStorage.getItem('jokeURL')) || 'https://v2.jokeapi.dev/joke/Any?type=single&amount=1';
 
 const jokeConfig = JSON.parse(localStorage.getItem('jokeConfig')) || {
   categories: ['Any'],
@@ -198,9 +198,28 @@ function saveJokeCustomisation() {
 
   jokeConfig.searchByKeyword.searchKeyword = jokeKeywordInput.value;
 
-  url = `https://v2.jokeapi.dev/joke/${jokeConfig.categories.join(',')}?type=${jokeConfig.type}&blacklistFlags=${jokeConfig.blacklistFlags.join(',')}&amount=${jokeConfig.amount}&contains=${jokeConfig.searchByKeyword.searchKeyword}&idRange=${jokeConfig.searchById.searchId}`;
+  const urlParams = new URLSearchParams({
+    type: jokeConfig.type,
+    amount: jokeConfig.amount
+  });
 
-  localStorage.setItem('url', JSON.stringify(url));
+  if (jokeConfig.blacklistFlags.length > 0) {
+    urlParams.append('blacklistFlags', jokeConfig.blacklistFlags);
+  }
+
+  if (jokeConfig.searchByKeyword.searchKeyword) {
+    urlParams.append('contains', jokeConfig.searchByKeyword.searchKeyword);
+  }
+
+  if (jokeConfig.searchById.searchId !== '') {
+    urlParams.append('idRange', jokeConfig.searchById.searchId)
+  }
+
+  // jokeURL = `https://v2.jokeapi.dev/joke/${jokeConfig.categories.join(',')}?type=${jokeConfig.type}&blacklistFlags=${jokeConfig.blacklistFlags.join(',')}&amount=${jokeConfig.amount}&contains=${jokeConfig.searchByKeyword.searchKeyword}&idRange=${jokeConfig.searchById.searchId}`;
+
+  jokeURL = `https://v2.jokeapi.dev/joke/${jokeConfig.categories.join(',')}?${urlParams.toString()}`;
+
+  localStorage.setItem('jokeURL', JSON.stringify(jokeURL));
   localStorage.setItem('jokeConfig', JSON.stringify(jokeConfig));
 
   applySavedJokeConfigs();
@@ -218,13 +237,13 @@ function saveJokeCustomisation() {
   jokePopup.classList.add('hide-popup');
   popupBackdrop.classList.add('hide-popup');
 
-  // console.log(url)
+  // console.log(jokeURL)
   // console.log(jokeConfig);
 }
 
 function resetJokeCustomisation() {
   localStorage.removeItem('jokeConfig');
-  localStorage.removeItem('url');
+  localStorage.removeItem('jokeURL');
 
   jokeConfig.categories = ['Any'];
   jokeConfig.blacklistFlags = [];
@@ -234,7 +253,7 @@ function resetJokeCustomisation() {
   jokeConfig.searchById.searchId = '';
   jokeConfig.searchByKeyword.isAllowed = false;
   jokeConfig.searchByKeyword.searchKeyword = '';
-  url = 'https://v2.jokeapi.dev/joke/Any?type=single&amount=1';
+  jokeURL = 'https://v2.jokeapi.dev/joke/Any?type=single&amount=1';
 
   applySavedJokeConfigs();
 
@@ -306,7 +325,7 @@ function applySavedJokeConfigs() {
 applySavedJokeConfigs();
 
 async function getJoke() {
-  const response = await fetch(url);
+  const response = await fetch(jokeURL);
 
   const responseData = await response.json();
   // console.log(responseData);
@@ -331,7 +350,7 @@ const tellAJokeButton = document.querySelector('.js-tell-a-joke');
 const giveAdviceButton = document.querySelector('.js-give-advice');
 
 tellAJokeButton.addEventListener('click', () => {
-  // console.log(url);
+  // console.log(jokeURL);
 
   if (timeoutId) {
     clearTimeout(timeoutId);
