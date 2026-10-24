@@ -44,6 +44,7 @@ customJokeRadio.addEventListener('change', (event) => {
       customCategoriesCheckboxes.forEach(category => {
         if (category.checked) {
           saveJokeCustomisationButton.disabled = false;
+          checkSearchValidity();
         }
       });
     });
@@ -52,6 +53,7 @@ customJokeRadio.addEventListener('change', (event) => {
 anyJokeRadio.addEventListener('change', () => {
   toggleJokeCustomCategories(false);
   saveJokeCustomisationButton.disabled = false;
+  checkSearchValidity();
 });
 
 function toggleJokeCustomCategories(enable) {
@@ -119,10 +121,24 @@ function toggleAllow(checkbox, inputElement) {
 }
 
 function checkSearchValidity() {
-  const jokeIdInputInvalid = !jokeIdInput.disabled && !jokeIdInput.value;
+  const jokeIdInputInvalid = !jokeIdInput.disabled && !jokeIdInput.value.trim();
   const jokeKeywordInputInvalid = !jokeKeywordInput.disabled && !jokeKeywordInput.value.trim();
 
-  if (jokeIdInputInvalid || jokeKeywordInputInvalid) {
+  const textInputsInvalid = jokeIdInputInvalid || jokeKeywordInputInvalid;
+
+  let customCategoriesChecked = 0;
+
+  customCategoriesCheckboxes.forEach(category => {
+    if (category.checked) {
+      customCategoriesChecked += 1;
+    }
+  });
+
+  const noCheckboxChecked = customCategoriesChecked === 0;
+
+  const categoriesValid = anyJokeRadio.checked || !noCheckboxChecked;
+
+  if (textInputsInvalid || !categoriesValid) {
     saveJokeCustomisationButton.disabled = true;
   } else {
     saveJokeCustomisationButton.disabled = false;
