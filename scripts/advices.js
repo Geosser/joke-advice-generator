@@ -1,8 +1,39 @@
 import { copyToClipboard } from "./utils/copyToClipboard.js";
 import { advicePopup } from "./utils/menu.js";
 
+let adviceURL = JSON.parse(localStorage.getItem('adviceURL')) || 'https://api.adviceslip.com/advice';
+
+let adviceConfig = {}
+
+const saveAdviceCustomisationButton = document.querySelector('.js-save-advice-customisation');
+
+saveAdviceCustomisationButton.addEventListener('click', () => {
+  console.log('advice customisation saved');
+  saveAdviceCustomisation();
+});
+
+const randomAdviceRadio = document.querySelector('.js-random-advice-radio');
+
+function saveAdviceCustomisation() {
+  if (randomAdviceRadio.checked) {
+    adviceConfig = {};
+    adviceConfig.category = randomAdviceRadio.value;
+  }
+
+  const urlParams = new URLSearchParams();
+
+  if (adviceConfig.category === 'random') {
+    adviceURL = 'https://api.adviceslip.com/advice';
+  }
+
+  localStorage.setItem('adviceConfig', JSON.stringify(adviceConfig));
+  localStorage.setItem('adviceURL', JSON.stringify(adviceURL));
+
+  console.log(adviceConfig);
+}
+
 async function getAdvice() {
-  const response = await fetch('https://api.adviceslip.com/advice');
+  const response = await fetch(adviceURL);
   
   if (!response.ok) {
     throw new Error(`Server Error. Response Status: ${response.status}`);
@@ -73,7 +104,7 @@ export async function renderAdvice() {
     `;
 
     contentContainer.innerHTML = `
-      <div><i class="fa-solid fa-face-frown"></i></div>
+      <div><i class="fa-solid fa-face-frown" style="color:#3b0000; font-size:50px"></i></div>
     `;
 
     timeoutId = setTimeout(() => {
@@ -88,17 +119,19 @@ async function giveAdvice() {
   const advice = adviceSlip.slip;
 
   const adviceHTML = `
-    <div>
-      <button class="copy js-copy" title="Copy Advice">
-        <i class="fa-regular fa-copy copy-hover"></i>
-        <i class="fa-solid fa-copy copy-active"></i>
-      </button>
-    </div>
+    <div class="advice-content">
+      <div>
+        <button class="copy js-copy" title="Copy Advice">
+          <i class="fa-regular fa-copy copy-hover"></i>
+          <i class="fa-solid fa-copy copy-active"></i>
+        </button>
+      </div>
 
-    <div class="info">Advice #${advice.id}</div>
+      <div class="advice-info">Advice #${advice.id}</div>
 
-    <div class="joke-advice-body js-advice">
-      ${advice.advice}
+      <div class="joke-advice-body js-advice">
+        ${advice.advice}
+      </div>
     </div>
   `;
 

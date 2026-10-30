@@ -302,7 +302,8 @@ header {
   text-align: center;
 }
 
-.joke-content {
+.joke-content,
+.advice-content {
   border: #a8a8a8 1px solid;
   padding: 10px;
   border-radius: 10px;
@@ -358,6 +359,17 @@ header {
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 10px;
+  color: #525252;
+  font-size: 13px;
+}
+
+.advice-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding-left: 20px;
   padding-right: 20px;
   margin-bottom: 10px;

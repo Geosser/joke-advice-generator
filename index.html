@@ -209,50 +209,50 @@
                 <div class="customise-heading">Select Advice category</div>
 
                 <div>
-                  <input type="radio" name="advice-category" id="Random" value="Random" checked>
-                  <label for="Random">Random</label>
+                  <input type="radio" name="advice-category" id="random" value="random" class="js-random-advice-radio" checked>
+                  <label for="random">Random</label>
                 </div>
 
                 <div class="custom-advice">
                   <div>
-                    <input type="radio" name="advice-category" id="custom-advice" value="Custom" disabled>
+                    <input type="radio" name="advice-category" id="custom-advice" value="custom" class="js-custom-advice-radio">
                     <label for="custom-advice">Custom:</label>
                   </div>
 
                   <div class="advice-custom-category">
                     <div>
                       <span>
-                        <input type="radio" name="custom-advice-search" id="advice-id" value="advice-id" disabled>
-                        <label for="advice-id">Search by ID:</label>
+                        <input type="radio" name="custom-advice-search" id="allow-advice-id-search" class="js-allow-advice-id-search" disabled>
+                        <label for="allow-advice-id-search">Search by ID:</label>
                       </span>
 
                       <span>
-                        <label for="id-number">ID no.:</label>
-                        <input type="number" id="id-number" min="1" max="10" disabled>
+                        <label for="advice-id-number">ID no.:</label>
+                        <input type="number" id="advice-id-number" min="1" max="10" disabled>
                       </span>
                     </div>
                     
                     <div>
                       <span>
-                        <input type="radio" name="custom-advice-search" id="advice-key" value="advice-key" disabled>
-                        <label for="advice-key">Search by advice keyword:</label>
+                        <input type="radio" name="custom-advice-search" id="allow-advice-keyword-search" class="js-allow-advice-keyword-search" disabled>
+                        <label for="allow-advice-keyword-search">Search by advice keyword:</label>
                       </span>
 
                       <span>
-                        <label for="keyword">Keyword:</label>
-                        <input type="text" id="keyword" placeholder="Enter keyword" disabled>
+                        <label for="advice-keyword">Keyword:</label>
+                        <input type="text" id="advice-keyword" placeholder="Enter keyword" disabled>
                       </span>
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <input type="radio" name="advice-category" id="daily-advice" value="daily-advice" disabled>
+                  <input type="radio" name="advice-category" id="daily-advice" value="daily-advice" class="js-daily-advice-radio">
                   <label for="daily-advice">Advice of the day</label>
                 </div>
 
                 <div class="save-button">
-                  <button class="primary-button save-advice-customisation">Save Customisation</button>
+                  <button class="primary-button save-advice-customisation js-save-advice-customisation">Save Customisation</button>
                 </div>
 
                 <div class="reset-button">
