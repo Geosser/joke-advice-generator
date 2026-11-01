@@ -209,9 +209,36 @@ function resetAdviceCustomisation() {
 
   adviceURL = 'https://api.adviceslip.com/advice';
 
+  applySavedAdviceConfigs();
+  handleCustomSearch();
+
   console.log(adviceConfig);
   console.log(adviceURL);
 }
+
+function applySavedAdviceConfigs() {
+  if (adviceConfig.category === 'random') {
+    randomAdviceRadio.checked = true;
+  } else if (adviceConfig.category === 'custom') {
+    customAdviceRadio.checked = true;
+    allowAdviceIdSearch.disabled = false;
+    allowAdviceKeywordSearch.disabled = false;
+  } else if (adviceConfig.category === 'daily-advice') {
+    dailyAdviceRadio.checked = true;
+  }
+
+  if (customAdviceRadio.checked) {
+    if (adviceConfig.searchById.isAllowed) {
+      adviceIdInput.disabled = false;
+      adviceIdInput.value = adviceConfig.searchById.searchId;
+    } else if (adviceConfig.searchByKeyword.isAllowed) {
+      adviceKeywordInput.disabled = false;
+      adviceKeywordInput.value = adviceConfig.searchByKeyword.searchKeyword;
+    }
+  }
+}
+
+applySavedAdviceConfigs();
 
 async function getAdvice() {
   const response = await fetch(adviceURL);
