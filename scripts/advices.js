@@ -16,10 +16,39 @@ let adviceConfig = JSON.parse(localStorage.getItem('adviceConfig')) || {
 };
 
 const saveAdviceCustomisationButton = document.querySelector('.js-save-advice-customisation');
+const resetAdviceCustomisationButton = document.querySelector('.js-reset-advice-customisation');
+
+let saveAdviceTimeoutId;
+let resetAdviceTimeoutId;
 
 saveAdviceCustomisationButton.addEventListener('click', () => {
   console.log('advice customisation saved');
   saveAdviceCustomisation();
+
+  saveAdviceCustomisationButton.innerHTML = 'Customisation Saved';
+
+  if (saveAdviceTimeoutId) {
+    clearTimeout(saveAdviceTimeoutId);
+  }
+
+  saveAdviceTimeoutId = setTimeout(() => {
+    saveAdviceCustomisationButton.innerHTML = 'Save Customisation';
+  }, 2000);
+});
+
+resetAdviceCustomisationButton.addEventListener('click', () => {
+  console.log('resetting customisation...');
+  resetAdviceCustomisation();
+
+  resetAdviceCustomisationButton.innerHTML = 'Customisation Reset';
+
+  if (resetAdviceTimeoutId) {
+    clearTimeout(resetAdviceTimeoutId);
+  }
+
+  resetAdviceTimeoutId = setTimeout(() => {
+    resetAdviceCustomisationButton.innerHTML = 'Reset Customisation';
+  }, 2000);  
 });
 
 const randomAdviceRadio = document.querySelector('.js-random-advice-radio');
@@ -166,6 +195,22 @@ function buildCustomAdviceURL() {
   }
 
   return url;
+}
+
+function resetAdviceCustomisation() {
+  localStorage.removeItem('adviceConfig');
+  localStorage.removeItem('adviceURL');
+
+  adviceConfig.category = 'random';
+  adviceConfig.searchById.isAllowed = false;
+  adviceConfig.searchByKeyword.isAllowed = false;
+  adviceConfig.searchById.searchId = null;
+  adviceConfig.searchByKeyword.searchKeyword = null;
+
+  adviceURL = 'https://api.adviceslip.com/advice';
+
+  console.log(adviceConfig);
+  console.log(adviceURL);
 }
 
 async function getAdvice() {
