@@ -3,7 +3,17 @@ import { advicePopup } from "./utils/menu.js";
 
 let adviceURL = JSON.parse(localStorage.getItem('adviceURL')) || 'https://api.adviceslip.com/advice';
 
-let adviceConfig = {}
+let adviceConfig = JSON.parse(localStorage.getItem('adviceConfig')) || {
+  category: 'random',
+  searchById: {
+    isAllowed: false,
+    searchId: null
+  },
+  searchByKeyword: {
+    isAllowed: false,
+    searchKeyword: null
+  }
+};
 
 const saveAdviceCustomisationButton = document.querySelector('.js-save-advice-customisation');
 
@@ -13,23 +23,149 @@ saveAdviceCustomisationButton.addEventListener('click', () => {
 });
 
 const randomAdviceRadio = document.querySelector('.js-random-advice-radio');
+const customAdviceRadio = document.querySelector('.js-custom-advice-radio');
+const dailyAdviceRadio = document.querySelector('.js-daily-advice-radio');
+
+const allowAdviceIdSearch = document.querySelector('.js-allow-advice-id-search');
+const allowAdviceKeywordSearch = document.querySelector('.js-allow-advice-keyword-search');
+
+const adviceIdInput = document.querySelector('.js-advice-id-input');
+const adviceKeywordInput = document.querySelector('.js-advice-keyword-input');
+
+randomAdviceRadio.addEventListener('change', () => {
+  if (randomAdviceRadio.checked) {
+    changeCategory(randomAdviceRadio.value);
+    handleCustomSearch();
+  }
+});
+
+customAdviceRadio.addEventListener('change', () => {
+  if (customAdviceRadio.checked) {
+    changeCategory(customAdviceRadio.value);
+    handleCustomSearch();
+  }
+});
+
+dailyAdviceRadio.addEventListener('change', () => {
+  if (dailyAdviceRadio.checked) {
+    changeCategory(dailyAdviceRadio.value);
+    handleCustomSearch();
+  }
+});
+
+allowAdviceIdSearch.addEventListener('change', () => {
+  adviceIdInput.disabled = false;
+  adviceKeywordInput.disabled = true;
+  adviceKeywordInput.value = '';
+
+  adviceConfig.searchByKeyword.isAllowed = false;
+  adviceConfig.searchById.isAllowed = true;
+  adviceConfig.searchByKeyword.searchKeyword = null;
+
+  validateCustomSearch(adviceIdInput);
+
+  console.log(adviceConfig);
+});
+
+allowAdviceKeywordSearch.addEventListener('change', () => {
+  adviceIdInput.disabled = true;
+  adviceKeywordInput.disabled = false;
+  adviceIdInput.value = '';
+
+  adviceConfig.searchById.isAllowed = false;
+  adviceConfig.searchByKeyword.isAllowed = true;
+  adviceConfig.searchById.searchId = null;
+
+  validateCustomSearch(adviceKeywordInput);
+
+  console.log(adviceConfig);
+});
+
+adviceIdInput.addEventListener('input', () => {
+  adviceConfig.searchById.searchId = Number(adviceIdInput.value);
+  console.log(adviceConfig);
+  validateCustomSearch(adviceIdInput);
+});
+
+adviceKeywordInput.addEventListener('input', () => {
+  adviceConfig.searchByKeyword.searchKeyword = adviceKeywordInput.value;
+  console.log(adviceConfig);
+  validateCustomSearch(adviceKeywordInput);
+});
+
+function validateCustomSearch(inputElement) {
+  if (inputElement.value.trim()) {
+    saveAdviceCustomisationButton.disabled = false;
+  } else {
+    saveAdviceCustomisationButton.disabled = true;
+  }
+}
+
+function changeCategory(category) {
+  adviceConfig.searchById.isAllowed = false;
+  adviceConfig.searchByKeyword.isAllowed = false;
+  adviceConfig.searchById.searchId = null;
+  adviceConfig.searchByKeyword.searchKeyword = null;
+
+  adviceConfig.category = category;
+
+  console.log(adviceConfig);
+}
+
+function saveConfigToStorage() {
+  localStorage.setItem('adviceConfig', JSON.stringify(adviceConfig));
+}
+
+function handleCustomSearch() {
+  if (customAdviceRadio.checked) {
+    allowAdviceIdSearch.disabled = false;
+    allowAdviceKeywordSearch.disabled = false;
+    saveAdviceCustomisationButton.disabled = true;
+
+  } else {
+    allowAdviceIdSearch.disabled = true;
+    allowAdviceKeywordSearch.disabled = true;
+    saveAdviceCustomisationButton.disabled = false;
+
+    allowAdviceIdSearch.checked = false;
+    adviceIdInput.disabled = true;
+
+    allowAdviceKeywordSearch.checked = false;
+    adviceKeywordInput.disabled = true;
+
+    adviceIdInput.value = '';
+    adviceKeywordInput.value = '';
+  }
+}
+
 
 function saveAdviceCustomisation() {
-  if (randomAdviceRadio.checked) {
-    adviceConfig = {};
-    adviceConfig.category = randomAdviceRadio.value;
-  }
-
-  const urlParams = new URLSearchParams();
-
   if (adviceConfig.category === 'random') {
     adviceURL = 'https://api.adviceslip.com/advice';
+  } else if (adviceConfig.category === 'custom') {
+    adviceURL = buildCustomAdviceURL();
+  } else if (adviceConfig.category === 'daily-advice') {
+    adviceURL = 'https://api.adviceslip.com/daily_adviceslip.rss';
   }
 
   localStorage.setItem('adviceConfig', JSON.stringify(adviceConfig));
   localStorage.setItem('adviceURL', JSON.stringify(adviceURL));
 
   console.log(adviceConfig);
+}
+
+function buildCustomAdviceURL() {
+  let url;
+  const id = Number(adviceConfig.searchById.searchId);
+  const query = adviceConfig.searchByKeyword.searchKeyword;
+
+  if (adviceConfig.searchById.isAllowed) {
+    url = `https://api.adviceslip.com/advice/${id}`;
+  } else if (adviceConfig.searchByKeyword.isAllowed) {
+    url = `https://api.adviceslip.com/advice/search/${query}`;
+  }
+
+  return url;
 }
 
 async function getAdvice() {
@@ -40,6 +176,18 @@ async function getAdvice() {
   }
 
   const responseData = await response.json();
+  console.log(responseData);
+  return responseData;
+}
+
+async function getDailyAdvice() {
+  const response = await fetch('https://api.adviceslip.com/daily_adviceslip.rss');
+  
+  if (!response.ok) {
+    throw new Error(`Server Error. Response Status: ${response.status}`);
+  }
+
+  const responseData = await response.text();
   console.log(responseData);
   return responseData;
 }

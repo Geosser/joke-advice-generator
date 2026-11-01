@@ -204,6 +204,11 @@ header {
   gap: 10px;
 }
 
+.advice-id-search-field,
+.advice-keyword-search-field {
+  padding-left: 20px;
+}
+
 .categories input:hover,
 .custom-blacklist input:hover,
 .custom-type input:hover,
@@ -229,7 +234,8 @@ header {
 .custom-id-search span:has(input:disabled) label,
 .custom-keyword-search span:has(input:disabled) label,
 .advice-popup-card input:disabled + label,
-.advice-custom-category:has(input:disabled) label {
+.advice-id-search-field:has(input:disabled) label,
+.advice-keyword-search-field:has(input:disabled) label {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -502,7 +508,8 @@ header {
   opacity: 0.5;
 }
 
-.save-joke-customisation:disabled {
+.save-joke-customisation:disabled,
+.save-advice-customisation:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -579,6 +586,11 @@ header {
     display: flex;
     flex-direction: row;
     gap: 10px;
+  }
+
+  .advice-id-search-field,
+  .advice-keyword-search-field {
+    padding-left: 5px;
   }
 
   .joke-advice-body {
