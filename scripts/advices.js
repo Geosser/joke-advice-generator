@@ -242,14 +242,30 @@ applySavedAdviceConfigs();
 
 async function getAdvice() {
   const response = await fetch(adviceURL);
-  
+  const responseData = await response.json();
+
   if (!response.ok) {
     throw new Error(`Server Error. Response Status: ${response.status}`);
   }
 
-  const responseData = await response.json();
-  console.log(responseData);
-  return responseData;
+  if (responseData.slip) {
+    return {
+      type: 'singleAdvice',
+      data: responseData
+    };
+
+  } else if (responseData.query) {
+    return {
+      type: 'queryAdvice',
+      data: responseData
+    };
+
+  } else if (responseData.message) {
+    return {
+      type: 'error',
+      data: responseData
+    };
+  }
 }
 
 async function getDailyAdvice() {
@@ -300,12 +316,12 @@ export async function renderAdvice() {
 
     contentContainer.innerHTML = html;
 
-    const copyButton = document.querySelector('.js-copy');
+    /* const copyButton = document.querySelector('.js-copy');
     copyButton.addEventListener('click', async () =>  {
       banner.classList.add('hide');
       const text = document.querySelector('.js-advice').innerText;
       await copyToClipboard(text);
-    });
+    }); */
 
     timeoutId = setTimeout(() => {
       giveAdviceButton.disabled = false;
@@ -335,25 +351,81 @@ export async function renderAdvice() {
 }
 
 async function giveAdvice() {
-  const adviceSlip = await getAdvice();
-  const advice = adviceSlip.slip;
+  let adviceHTML = '';
 
-  const adviceHTML = `
-    <div class="advice-content">
-      <div>
-        <button class="copy js-copy" title="Copy Advice">
-          <i class="fa-regular fa-copy copy-hover"></i>
-          <i class="fa-solid fa-copy copy-active"></i>
-        </button>
+  const responseData = await getAdvice();
+
+  if (responseData.type === 'singleAdvice') {
+    adviceHTML = `
+      <div class="advice-content">
+        <div>
+          <button class="copy js-copy" title="Copy Advice">
+            <i class="fa-regular fa-copy copy-hover"></i>
+            <i class="fa-solid fa-copy copy-active"></i>
+          </button>
+        </div>
+
+        <div class="advice-info">Advice #${responseData.data.slip.id}</div>
+
+        <div class="joke-advice-body js-advice">
+          ${responseData.data.slip.advice}
+        </div>
       </div>
+    `;
 
-      <div class="advice-info">Advice #${advice.id}</div>
+    return adviceHTML;
 
-      <div class="joke-advice-body js-advice">
-        ${advice.advice}
+  } else if (responseData.type === 'queryAdvice') {
+    adviceHTML = `
+      <div class="advice-query-info">
+        <div>
+          Results for:
+          <span class="query-string">"${responseData.data.query}"</span>
+        </div>
+
+        <div>
+          Total results found:
+          <span class="query-number">${responseData.data.total_results}</span>
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-  return adviceHTML;
+    responseData.data.slips.forEach(slip => {
+      adviceHTML += `
+        <div class="advice-content">
+          <div>
+            <button class="copy js-copy" title="Copy Advice">
+              <i class="fa-regular fa-copy copy-hover"></i>
+              <i class="fa-solid fa-copy copy-active"></i>
+            </button>
+          </div>
+
+          <div class="advice-info">Advice #${slip.id}</div>
+
+          <div class="joke-advice-body js-advice">
+            ${slip.advice}
+          </div>
+
+          <div class="advice-date">Date: ${slip.date}</div>
+        </div>
+      `;
+    });
+
+    return adviceHTML;
+
+  } else if (responseData.type === 'error') {    
+    adviceHTML = `
+      <div class="error-container">
+        <div class="advice-info">${responseData.data.message.type}</div>
+
+        <div><i class="fa-solid fa-face-frown" style="color:#3b0000; font-size:50px"></i></div>
+
+        <div class="joke-advice-body js-advice">
+          ${responseData.data.message.text}
+        </div>
+      </div>
+    `;
+
+    return adviceHTML;
+  }
 }
