@@ -316,12 +316,18 @@ export async function renderAdvice() {
 
     contentContainer.innerHTML = html;
 
-    /* const copyButton = document.querySelector('.js-copy');
-    copyButton.addEventListener('click', async () =>  {
-      banner.classList.add('hide');
-      const text = document.querySelector('.js-advice').innerText;
-      await copyToClipboard(text);
-    }); */
+    const copyButtons = document.querySelectorAll('.js-copy');
+
+    copyButtons.forEach(copyButton => {
+      copyButton.addEventListener('click', async () =>  {
+        banner.classList.add('hide');
+
+        const { adviceId } = copyButton.dataset;
+
+        const text = document.querySelector(`.js-advice-${adviceId}`).innerText;
+        await copyToClipboard(text, adviceId);
+      });
+    });
 
     timeoutId = setTimeout(() => {
       giveAdviceButton.disabled = false;
@@ -362,7 +368,11 @@ async function giveAdvice() {
     const dateElement = htmlResponse.querySelector('pubdate');
     const adviceElement = htmlResponse.getElementsByTagName('media:title');
 
+    const idElement = htmlResponse.getElementsByTagName('a');
+    const adviceId = idElement[0].hash.slice(1);
+
     const adviceData = {
+      id: idElement ? adviceId : null,
       date: dateElement ? new Date(dateElement.textContent) : null,
       advice: adviceElement ? adviceElement[0].textContent : null
     }
@@ -372,7 +382,7 @@ async function giveAdvice() {
     adviceHTML = `
       <div class="advice-content">
         <div>
-          <button class="copy js-copy" title="Copy Advice">
+          <button class="copy js-copy js-copy-${adviceId}" title="Copy Advice" data-advice-id=${adviceId}>
             <i class="fa-regular fa-copy copy-hover"></i>
             <i class="fa-solid fa-copy copy-active"></i>
           </button>
@@ -382,7 +392,7 @@ async function giveAdvice() {
           Advice for the the Day: ${adviceData.date.toDateString()}
         </div>
 
-        <div class="joke-advice-body js-advice">
+        <div class="joke-advice-body js-advice js-advice-${adviceId}">
           ${adviceData.advice}
         </div>
       </div>
@@ -397,7 +407,7 @@ async function giveAdvice() {
     adviceHTML = `
       <div class="advice-content">
         <div>
-          <button class="copy js-copy" title="Copy Advice">
+          <button class="copy js-copy js-copy-${responseData.data.slip.id}" title="Copy Advice" data-advice-id=${responseData.data.slip.id}>
             <i class="fa-regular fa-copy copy-hover"></i>
             <i class="fa-solid fa-copy copy-active"></i>
           </button>
@@ -405,7 +415,7 @@ async function giveAdvice() {
 
         <div class="advice-info">Advice #${responseData.data.slip.id}</div>
 
-        <div class="joke-advice-body js-advice">
+        <div class="joke-advice-body js-advice js-advice-${responseData.data.slip.id}">
           ${responseData.data.slip.advice}
         </div>
       </div>
@@ -432,7 +442,7 @@ async function giveAdvice() {
       adviceHTML += `
         <div class="advice-content">
           <div>
-            <button class="copy js-copy" title="Copy Advice">
+            <button class="copy js-copy js-copy-${slip.id}" title="Copy Advice" data-advice-id=${slip.id}>
               <i class="fa-regular fa-copy copy-hover"></i>
               <i class="fa-solid fa-copy copy-active"></i>
             </button>
@@ -440,7 +450,7 @@ async function giveAdvice() {
 
           <div class="advice-info">Advice #${slip.id}</div>
 
-          <div class="joke-advice-body js-advice">
+          <div class="joke-advice-body js-advice js-advice-${slip.id}">
             ${slip.advice}
           </div>
 

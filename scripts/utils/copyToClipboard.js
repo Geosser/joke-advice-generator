@@ -21,7 +21,7 @@ export async function copyToClipboard(text, jokeIndex) {
       `;
 
       banner.classList.add('hide');
-    }, 2000);
+    }, 4000);
 
   } catch (error) {
     banner.classList.remove('hide');
