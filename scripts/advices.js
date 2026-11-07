@@ -276,7 +276,7 @@ async function getDailyAdvice() {
   }
 
   const responseData = await response.text();
-  console.log(responseData);
+
   return responseData;
 }
 
@@ -352,6 +352,44 @@ export async function renderAdvice() {
 
 async function giveAdvice() {
   let adviceHTML = '';
+
+  if (adviceConfig.category === 'daily-advice') {
+    const responseData = await getDailyAdvice();
+
+    const parser = new DOMParser();
+    const htmlResponse = parser.parseFromString(responseData, 'text/html');
+
+    const dateElement = htmlResponse.querySelector('pubdate');
+    const adviceElement = htmlResponse.getElementsByTagName('media:title');
+
+    const adviceData = {
+      date: dateElement ? new Date(dateElement.textContent) : null,
+      advice: adviceElement ? adviceElement[0].textContent : null
+    }
+
+    console.log(adviceData);
+
+    adviceHTML = `
+      <div class="advice-content">
+        <div>
+          <button class="copy js-copy" title="Copy Advice">
+            <i class="fa-regular fa-copy copy-hover"></i>
+            <i class="fa-solid fa-copy copy-active"></i>
+          </button>
+        </div>
+
+        <div class="advice-info">
+          Advice for the the Day: ${adviceData.date.toDateString()}
+        </div>
+
+        <div class="joke-advice-body js-advice">
+          ${adviceData.advice}
+        </div>
+      </div>
+    `;
+
+    return adviceHTML;
+  }
 
   const responseData = await getAdvice();
 
