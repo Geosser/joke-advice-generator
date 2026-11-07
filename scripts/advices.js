@@ -1,5 +1,5 @@
 import { copyToClipboard } from "./utils/copyToClipboard.js";
-import { advicePopup } from "./utils/menu.js";
+import { advicePopup, popupBackdrop } from "./utils/menu.js";
 
 let adviceURL = JSON.parse(localStorage.getItem('adviceURL')) || 'https://api.adviceslip.com/advice';
 
@@ -22,7 +22,6 @@ let saveAdviceTimeoutId;
 let resetAdviceTimeoutId;
 
 saveAdviceCustomisationButton.addEventListener('click', () => {
-  console.log('advice customisation saved');
   saveAdviceCustomisation();
 
   saveAdviceCustomisationButton.innerHTML = 'Customisation Saved';
@@ -34,10 +33,12 @@ saveAdviceCustomisationButton.addEventListener('click', () => {
   saveAdviceTimeoutId = setTimeout(() => {
     saveAdviceCustomisationButton.innerHTML = 'Save Customisation';
   }, 2000);
+
+  advicePopup.classList.add('hide-popup');
+  popupBackdrop.classList.add('hide-popup');
 });
 
 resetAdviceCustomisationButton.addEventListener('click', () => {
-  console.log('resetting customisation...');
   resetAdviceCustomisation();
 
   resetAdviceCustomisationButton.innerHTML = 'Customisation Reset';
@@ -92,8 +93,6 @@ allowAdviceIdSearch.addEventListener('change', () => {
   adviceConfig.searchByKeyword.searchKeyword = null;
 
   validateCustomSearch(adviceIdInput);
-
-  console.log(adviceConfig);
 });
 
 allowAdviceKeywordSearch.addEventListener('change', () => {
@@ -106,19 +105,15 @@ allowAdviceKeywordSearch.addEventListener('change', () => {
   adviceConfig.searchById.searchId = null;
 
   validateCustomSearch(adviceKeywordInput);
-
-  console.log(adviceConfig);
 });
 
 adviceIdInput.addEventListener('input', () => {
   adviceConfig.searchById.searchId = Number(adviceIdInput.value);
-  console.log(adviceConfig);
   validateCustomSearch(adviceIdInput);
 });
 
 adviceKeywordInput.addEventListener('input', () => {
   adviceConfig.searchByKeyword.searchKeyword = adviceKeywordInput.value;
-  console.log(adviceConfig);
   validateCustomSearch(adviceKeywordInput);
 });
 
@@ -137,8 +132,6 @@ function changeCategory(category) {
   adviceConfig.searchByKeyword.searchKeyword = null;
 
   adviceConfig.category = category;
-
-  console.log(adviceConfig);
 }
 
 function saveConfigToStorage() {
@@ -179,8 +172,6 @@ function saveAdviceCustomisation() {
 
   localStorage.setItem('adviceConfig', JSON.stringify(adviceConfig));
   localStorage.setItem('adviceURL', JSON.stringify(adviceURL));
-
-  console.log(adviceConfig);
 }
 
 function buildCustomAdviceURL() {
@@ -212,8 +203,8 @@ function resetAdviceCustomisation() {
   applySavedAdviceConfigs();
   handleCustomSearch();
 
-  console.log(adviceConfig);
-  console.log(adviceURL);
+  // console.log(adviceConfig);
+  // console.log(adviceURL);
 }
 
 function applySavedAdviceConfigs() {
@@ -377,7 +368,7 @@ async function giveAdvice() {
       advice: adviceElement ? adviceElement[0].textContent : null
     }
 
-    console.log(adviceData);
+    // console.log(adviceData);
 
     adviceHTML = `
       <div class="advice-content">
